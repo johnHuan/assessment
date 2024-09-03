@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>数据表格</title>
+		<link rel="stylesheet" href="../../component/pear/css/pear.css" />
+	</head>
+	<body class="pear-container">
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<form class="layui-form" action="">
+					<div class="layui-form-item">
+						<label class="layui-form-label">用户名</label>
+						<div class="layui-input-inline">
+							<input type="text" name="realName" placeholder="" class="layui-input">
+						</div>
+						<label class="layui-form-label">账号</label>
+						<div class="layui-input-inline">
+							<input type="text" name="username" placeholder="" class="layui-input">
+						</div>
+						<button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+							<i class="layui-icon layui-icon-search"></i>
+							查询
+						</button>
+						<button type="reset" class="pear-btn pear-btn-md">
+							<i class="layui-icon layui-icon-refresh"></i>
+							重置
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<table id="user-table" lay-filter="user-table"></table>
+			</div>
+		</div>
+
+	<script type="text/html" id="user-toolbar">
+		<button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+			<i class="layui-icon layui-icon-add-1"></i>
+			新增
+		</button>
+		<button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+			<i class="layui-icon layui-icon-delete"></i>
+			删除
+		</button>
+	</script>
+
+	<script type="text/html" id="user-bar">
+		<button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit"><i class="layui-icon layui-icon-edit"></i></button>
+		<button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-delete"></i></button>
+        <button class="pear-btn pear-btn-sm" id="more_{{d.userId}}"><i class="layui-icon layui-icon-triangle-d"></i></button>
+	</script>
+
+	<script type="text/html" id="user-enable">
+		<input type="checkbox" name="enable" value="{{d.id}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="user-enable" checked = "{{ d.enable == 0 ? 'true' : 'false' }}">
+	</script>
+
+	<script type="text/html" id="user-sex">
+		{{#if (d.sex == 1) { }}
+		<span>男</span>
+		{{# }else if(d.sex == 2){ }}
+		<span>女</span>
+		{{# } }}
+	</script>
+
+	<script type="text/html" id="user-login">
+		{{#if (d.login == 0) { }}
+		<span>在线</span>
+		{{# }else if(d.sex == 1){ }}
+		<span>离线</span>
+		{{# } }}
+	</script>
+
+	<script type="text/html" id="user-createTime">
+		{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+	</script>
+
+	<div style="display: none;">
+		<div class="layer-top">
+			<br />
+			<h3>上侧弹层内容...</h3>
+		</div>
+	</div>
+
+		<script src="../../component/layui/layui.js"></script>
+		<script src="../../component/pear/pear.js"></script>
+		<script>
+layui.use('table', function(){
+  var table = layui.table;
+  
+  //展示已知数据
+  table.render({
+    elem: '#user-table'
+    ,cols: [[ //标题栏
+      {field: 'id', title: 'ID', width: 80, sort: true}
+      ,{field: 'username', title: '用户名', width: 120}
+      ,{field: 'email', title: '邮箱', minWidth: 150}
+      ,{field: 'sign', title: '签名', minWidth: 160}
+      ,{field: 'sex', title: '性别', width: 80}
+      ,{field: 'city', title: '城市', width: 100}
+      ,{field: 'experience', title: '积分', width: 80, sort: true}
+    ]]
+    ,data: [{
+      "id": "10001"
+      ,"username": "杜甫"
+      ,"email": "test@email.com"
+      ,"sex": "男"
+      ,"city": "浙江杭州"
+      ,"sign": "人生恰似一场修行"
+      ,"experience": "116"
+      ,"ip": "192.168.0.8"
+      ,"logins": "108"
+      ,"joinTime": "2016-10-14"
+    }, {
+      "id": "10002"
+      ,"username": "李白"
+      ,"email": "test@email.com"
+      ,"sex": "男"
+      ,"city": "浙江杭州"
+      ,"sign": "人生恰似一场修行"
+      ,"experience": "12"
+      ,"ip": "192.168.0.8"
+      ,"logins": "106"
+      ,"joinTime": "2016-10-14"
+      ,"LAY_CHECKED": true
+    }, {
+      "id": "10003"
+      ,"username": "王勃"
+      ,"email": "test@email.com"
+      ,"sex": "男"
+      ,"city": "浙江杭州"
+      ,"sign": "人生恰似一场修行"
+      ,"experience": "65"
+      ,"ip": "192.168.0.8"
+      ,"logins": "106"
+      ,"joinTime": "2016-10-14"
+    }, {
+      "id": "10004"
+      ,"username": "贤心"
+      ,"email": "test@email.com"
+      ,"sex": "男"
+      ,"city": "浙江杭州"
+      ,"sign": "人生恰似一场修行"
+      ,"experience": "666"
+      ,"ip": "192.168.0.8"
+      ,"logins": "106"
+      ,"joinTime": "2016-10-14"
+    }, {
+      "id": "10005"
+      ,"username": "贤心"
+      ,"email": "test@email.com"
+      ,"sex": "男"
+      ,"city": "浙江杭州"
+      ,"sign": "人生恰似一场修行"
+      ,"experience": "86"
+      ,"ip": "192.168.0.8"
+      ,"logins": "106"
+      ,"joinTime": "2016-10-14"
+    }, {
+      "id": "10006"
+      ,"username": "贤心"
+      ,"email": "test@email.com"
+      ,"sex": "男"
+      ,"city": "浙江杭州"
+      ,"sign": "人生恰似一场修行"
+      ,"experience": "12"
+      ,"ip": "192.168.0.8"
+      ,"logins": "106"
+      ,"joinTime": "2016-10-14"
+    }, {
+      "id": "10007"
+      ,"username": "贤心"
+      ,"email": "test@email.com"
+      ,"sex": "男"
+      ,"city": "浙江杭州"
+      ,"sign": "人生恰似一场修行"
+      ,"experience": "16"
+      ,"ip": "192.168.0.8"
+      ,"logins": "106"
+      ,"joinTime": "2016-10-14"
+    }, {
+      "id": "10008"
+      ,"username": "贤心"
+      ,"email": "test@email.com"
+      ,"sex": "男"
+      ,"city": "浙江杭州"
+      ,"sign": "人生恰似一场修行"
+      ,"experience": "106"
+      ,"ip": "192.168.0.8"
+      ,"logins": "106"
+      ,"joinTime": "2016-10-14"
+    }]
+    //,skin: 'line' //表格风格
+    ,even: true
+    //,page: true //是否显示分页
+    //,limits: [5, 7, 10]
+    //,limit: 5 //每页默认显示的数量
+  });
+});
+</script>
+	</body>
+</html>

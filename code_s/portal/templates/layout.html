@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+{% include 'link_head.html' %}
+<body>
+<div class="layui-layout layui-layout-admin">
+    {% include 'layui-header.html' %}
+    {% include 'layui-sidebar.html' %}
+    {% block content %}{% endblock %}
+    {% include 'layui-footer.html' %}
+</div>
+</body>
+</html>

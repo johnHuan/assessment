@@ -1,0 +1,86 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<!-- 这里是子模板填充的内容 -->
+<div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div style="padding: 15px;">
+        <blockquote class="layui-elem-quote layui-text">
+            {{ page_loc }}
+        </blockquote>
+
+        <div class="layui-card-body ">
+            <div class="layui-upload-drag" style="display: block; width: 60%px; padding: 50px 0; margin: 0 auto;" id="ID-upload-demo-drag">
+                <i class="layui-icon layui-icon-upload"></i>
+                <div>点击上传，或将文件拖拽到此处</div>
+                <div class="layui-hide" id="ID-upload-demo-preview">
+                    <hr>
+                    <img src="" alt="上传成功后渲染" style="max-width: 100%; height: 100px;">
+                </div>
+            </div>
+            <div class="layui-panel layui-hide" id="id-preview-info" style="padding: 20px 40px; margin-top: 30px;"></div>
+            <button type="button" style="margin-top: 30px;" class="layui-btn layui-col-md4 layui-btn-disabled" id="ID-upload-demo-action">开始上传</button>
+            <div id="error-box" class="layui-panel layui-hide">
+                <div id="error_info" class="layui-bg-red" style="padding: 32px;"></div>
+            </div>
+            <div id="progress" class="layui-hide layui-progress layui-progress-big" lay-showpercent="true" lay-filter="progress">
+                <div class="layui-progress-bar" lay-percent=""></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+<script>
+layui.use(['upload', 'element', 'layer'], function(){
+  var upload = layui.upload;
+  var layer = layui.layer;
+  var element = layui.element;
+  var $ = layui.$;
+  // 渲染
+  upload.render({
+    elem: '#ID-upload-demo-drag',
+    accept: 'file',
+    auto: false,
+    bindAction: '#ID-upload-demo-action',
+    url: '/fire_upload_do',
+    choose: function(obj){
+        obj.preview(function(index, file, result){
+            $('#id-preview-info').removeClass('layui-hide').html('文件名： ' + file.name + '       | 文件大小： ' + file.sizes);
+        });
+        layer.msg('文件读取中，请稍候！', {icon: 16, time: 3000});
+        $('#ID-upload-demo-action').removeClass('layui-btn-disabled');
+        $('#ID-upload-demo-action').attr('disabled', false);
+    },
+    before: function(obj){
+        element.progress('filter-demo', '0%');
+        $('#progress').removeClass('layui-hide');
+        element.render('progress');
+        layer.msg('上传中', {icon: 16, time: 3});
+    },
+    done: function(res){
+        layer.msg('上传成功');
+        $('#ID-upload-demo-preview').removeClass('layui-hide').find('img').attr('src', "static/img/success.png");
+        $('#ID-upload-demo-action').addClass('layui-btn-disabled');
+        $('#progress').addClass('layui-hide');
+        $('#ID-upload-demo-action').attr('disabled', true);
+    },
+    error: function(){
+        //演示失败状态，并实现重传
+        $('#error-box').removeClass('layui-hide');
+        var error_info = $('#error-info');
+        error_info.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+        error_info.find('.demo-reload').on('click', function(){
+            uploadInst.upload();
+        });
+    },
+    progress: function(n, elem, e, index){
+      element.progress('progress', n + '%');
+      $('#ID-upload-demo-action').removeClass('layui-btn-disabled');
+      if(n == 100){
+        layer.msg('上传完毕', {icon: 1});
+      }
+    }
+  });
+});
+</script>
+{% endblock %}

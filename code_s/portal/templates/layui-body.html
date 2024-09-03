@@ -1,0 +1,26 @@
+<div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <blockquote class="layui-elem-quote layui-text">
+                消防设施 / 消防设施分布图
+            </blockquote>
+
+            <div class="layui-card-body">
+                <div id="map_container"></div>
+                <div class="input-card" style='width:28rem;'>
+                    <label style='color:grey'>地理编码，根据地址获取经纬度坐标</label>
+                    <div class="input-item">
+                        <div class="input-item-prepend"><span class="input-item-text">地址</span></div>
+                        <input id='address' type="text">
+                    </div>
+                    <div class="input-item">
+                        <div class="input-item-prepend"><span class="input-item-text">经纬度</span></div>
+                        <input id='lnglat' disabled type="text">
+                    </div>
+                    <input id="geo" type="button" class="btn" value="地址 -> 经纬度"/>
+
+                </div>
+                <div class="status"></div>
+            </div>
+        </div>
+    </div>
