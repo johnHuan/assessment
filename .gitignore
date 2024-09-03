@@ -1,6 +1,6 @@
-.idea/
-data/
-venv/
+/.idea/
+/data/
+/venv/
 方案结果汇报.pptx
 程序说明.docx
 assessment.mxd
