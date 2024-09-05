@@ -19,16 +19,16 @@ class N3(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.hazard_buffers = data_dict["hazard_buffers"]
-        self.polygons = data_dict["polygons_for_planning"]
-        self.temp_file = data_dict["temp_file_planning"]
+        self.hazard_buffers = data_dict['buffers']["hazard_buffers"]
+        self.polygons = data_dict['shp_path']["polygons_for_planning"]
+        self.temp_file = data_dict['directories']["temp_file_planning"]
         self.hazardous_facilities = os.path.join(self.temp_file, "near_hazardous_facilities.shp")
 
         self.get_N3()
 
     def get_N3(self):
-        get_accessibility(self.polygons, self.hazardous_facilities,
-                          self.hazard_buffers, self.temp_file, count_name="N3")
+        get_accessibility(self.polygons, self.hazardous_facilities, self.hazard_buffers,
+                          self.temp_file, weight_index=200.0, count_name="N3")
         field_normalize(self.polygons, "N3", "nN3")
 
     def __iter__(self):

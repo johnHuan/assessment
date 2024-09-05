@@ -7,6 +7,7 @@
 
 import arcpy
 import os
+import time
 import pandas as pd
 from dbfread import DBF
 from file_helper import get_fire_risk, get_per_area, get_n_extent
@@ -29,13 +30,13 @@ class Valuation_Preparation(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons_file = data_dict["polygons"]
-        self.temp_file = data_dict["temp_file"]
-        self.pop_raster = data_dict["pop_raster"]
-        self.buildings_dir = data_dict["buildings_dir"]
-        self.fire_risk_weights = data_dict["fire_risk_weights"]
-        self.per_CA = data_dict["per_capita_service_area"]
-        self.n_extent = data_dict["N_extent"]
+        self.polygons_file = data_dict['shp_path']["polygons"]
+        self.temp_file = data_dict['directories']["temp_file"]
+        self.pop_raster = data_dict['other_files']["pop_raster"]
+        self.buildings_dir = data_dict['directories']["buildings_dir"]
+        self.fire_risk_weights = data_dict['excel_path']["fire_risk_weights"]
+        self.per_CA = data_dict['excel_path']["per_capita_service_area"]
+        self.n_extent = data_dict['excel_path']["N_extent"]
         self.buildings_shp = os.path.join(self.temp_file, "buildings.shp")
         self.building_points = os.path.join(self.temp_file, "building_points.shp")
         self.fire_station = os.path.join(self.temp_file, "fire_station.shp")
@@ -109,8 +110,10 @@ class Valuation_Preparation(object):
     def get_building_areas(self):
         polygon2point(self.buildings_shp, self.building_points)
         intersect_file = os.path.join(self.temp_file, "bp_intersects.shp")
-        arcpy.Intersect_analysis([self.building_points, self.polygons_file], intersect_file, "ALL", "", "")
+        arcpy.Intersect_analysis([self.building_points, self.polygons_file],
+                                 intersect_file, "ALL", "", "")
 
+        # time.sleep(5)   # 在部分设备上必须休眠一段时间，负责无法生成中间文件
         # add_field(intersect_file, "Temp1", 'DOUBLE')
         add_field(intersect_file, "Temp3", 'TEXT')
 
@@ -230,9 +233,9 @@ class Valuation_Preparation(object):
             if not fc_row:
                 break
             # print(fc_row.JU_Name)
-            if "垃圾" in fc_row.JU_Name and "转运" not in fc_row.JU_Name:
+            if "垃圾" in fc_row.JU_Name and "转" not in fc_row.JU_Name:
                 fc_row.JU_Type = "垃圾收集站"
-            elif "转运" in fc_row.JU_Name:
+            elif "转" in fc_row.JU_Name:
                 fc_row.JU_Type = "垃圾转运站"
             else:
                 pass
@@ -259,16 +262,16 @@ class Planning_Preparation(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons_for_planning = data_dict["polygons_for_planning"]
-        self.polygons_file = data_dict["polygons"]
-        self.temp_file = data_dict["temp_file"]
-        self.temp_file_planning = data_dict["temp_file_planning"]
-        self.buffers = data_dict["buffers"]
-        self.hazard_buffers = data_dict["hazard_buffers"]
-        self.hazardous_facilities = data_dict["hazardous_facilities"]
-        self.fire_risk_weights = data_dict["fire_risk_weights"]
-        self.per_CA = data_dict["per_capita_service_area"]
-        self.n_extent = data_dict["N_extent"]
+        self.polygons_for_planning = data_dict['shp_path']["polygons_for_planning"]
+        self.polygons_file = data_dict['shp_path']["polygons"]
+        self.temp_file = data_dict['directories']["temp_file"]
+        self.temp_file_planning = data_dict['directories']["temp_file_planning"]
+        self.buffers = data_dict['buffers']["transfer_buffers"]
+        self.hazard_buffers = data_dict['buffers']["hazard_buffers"]
+        self.hazardous_facilities = data_dict['shp_path']["hazardous_facilities"]
+        self.fire_risk_weights = data_dict['excel_path']["fire_risk_weights"]
+        self.per_CA = data_dict['excel_path']["per_capita_service_area"]
+        self.n_extent = data_dict['excel_path']["N_extent"]
 
         self.new_fire_station = os.path.join(self.temp_file_planning, "new_fire_station.shp")
         self.new_collection_station = os.path.join(self.temp_file_planning, "new_collection_station.shp")
@@ -379,18 +382,24 @@ if __name__ == '__main__':
     # Valuation_Preparation(config_dict)
 
     #######################################
-    config_dict = {
-        "polygons": r"D:\lb\myCode\assessment\data\data_for_test\polygons\test.shp",  # 地块数据
-        "temp_file_planning": r"D:\lb\myCode\assessment\data\temp\planning",  # 临时文件夹
-        "temp_file": r"D:\lb\myCode\assessment\data\temp\valuation",  # 临时文件夹
-        "polygons_for_planning": r"D:\lb\myCode\assessment\data\data_for_test\polygons\planning.shp",  # 用于规划的用地数据
-        "buffers": [100.0, 500.0, 1000.0, 2000.0, 5000.0],  # 计算可达性的多级缓冲区的缓冲半径（米）
-        "hazard_buffers": [10.0, 50.0, 100.0, 200.0, 500.0],  # 计算可达性的多级缓冲区的缓冲半径（米）
-        "hazardous_facilities": r"D:\lb\myCode\assessment\data\data_for_test\POIs\hazardous_facilities.shp",  # 危险设施POI
-        "fire_risk_weights": r"D:\lb\myCode\assessment\data\data_for_test\tables\fire_risk_weights.xlsx",  # 用地消防风险系数表
-        "per_capita_service_area": r"D:\lb\myCode\assessment\data\data_for_test\tables\per_capita_service_area.xlsx",
-        # 人均服务面积表
-        "N_extent": r"D:\lb\myCode\assessment\data\data_for_test\tables\N_extent.xlsx"  # N计算范围
-    }
+    # config_dict = {
+    #     "polygons": r"D:\lb\myCode\assessment\data\data_for_test\polygons\test.shp",  # 地块数据
+    #     "temp_file_planning": r"D:\lb\myCode\assessment\data\temp\planning",  # 临时文件夹
+    #     "temp_file": r"D:\lb\myCode\assessment\data\temp\valuation",  # 临时文件夹
+    #     "polygons_for_planning": r"D:\lb\myCode\assessment\data\data_for_test\polygons\planning.shp",  # 用于规划的用地数据
+    #     "buffers": [100.0, 500.0, 1000.0, 2000.0, 5000.0],  # 计算可达性的多级缓冲区的缓冲半径（米）
+    #     "hazard_buffers": [10.0, 50.0, 100.0, 200.0, 500.0],  # 计算可达性的多级缓冲区的缓冲半径（米）
+    #     "hazardous_facilities": r"D:\lb\myCode\assessment\data\data_for_test\POIs\hazardous_facilities.shp",  # 危险设施POI
+    #     "fire_risk_weights": r"D:\lb\myCode\assessment\data\data_for_test\tables\fire_risk_weights.xlsx",  # 用地消防风险系数表
+    #     "per_capita_service_area": r"D:\lb\myCode\assessment\data\data_for_test\tables\per_capita_service_area.xlsx",
+    #     # 人均服务面积表
+    #     "N_extent": r"D:\lb\myCode\assessment\data\data_for_test\tables\N_extent.xlsx"  # N计算范围
+    # }
+    #
+    # Planning_Preparation(config_dict)
 
-    Planning_Preparation(config_dict)
+    building_points0 = r"C:\Users\Administrator\Desktop\assessment\data\temp\valuation\building_points.shp"
+    polygons_file0 = r"C:\Users\Administrator\Desktop\assessment\data\data_sources\polygons\polygons.shp"
+    intersect_file0 = r"C:\Users\Administrator\Desktop\assessment\data\temp\valuation\bp_intersects.shp"
+
+    arcpy.Intersect_analysis([building_points0, polygons_file0], intersect_file0, "ALL", "", "")

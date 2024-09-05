@@ -6,6 +6,7 @@
 
 
 import arcpy
+import gc
 from S1_ import S1_
 from S2_ import S2_
 from N1_ import N1_
@@ -25,12 +26,27 @@ class Sanitation_SNC(object):
     def __init__(self, data_dict):
         print("\n正在评估环卫服务能力...")
 
-        S1_(data_dict)
         S2_(data_dict)
-        N1_(data_dict)
-        N2_(data_dict)
+        # del S2_
+        gc.collect()
+        print("\nS2_计算完成！")
 
-        self.polygons = data_dict["polygons"]
+        S1_(data_dict)
+        # del S1_
+        gc.collect()
+        print("\nS1_计算完成！")
+
+        N1_(data_dict)
+        # del N1_
+        gc.collect()
+        print("\nN1_计算完成！")
+
+        N2_(data_dict)
+        # del N2_
+        gc.collect()
+        print("\nN2_计算完成！\n")
+
+        self.polygons = data_dict['shp_path']["polygons"]
 
         self.get_S_()
         self.get_N_()

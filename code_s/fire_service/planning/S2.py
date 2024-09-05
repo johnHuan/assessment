@@ -24,8 +24,8 @@ class S2(object):
 
     def __init__(self, data_dict):
         self.fire_station = ""
-        self.polygons = data_dict["polygons_for_planning"]
-        self.temp_file = data_dict["temp_file_planning"]
+        self.polygons = data_dict['shp_path']["polygons_for_planning"]
+        self.temp_file = data_dict['directories']["temp_file_planning"]
         self.fire_station = os.path.join(self.temp_file, "fire_station.shp")
         self.fire_station_poi = os.path.join(self.temp_file, "fire_station_poi.shp")
 
@@ -35,11 +35,11 @@ class S2(object):
     def fire_station_allocate(self):
         polygon2point(self.fire_station, self.fire_station_poi)
         thiessen_shp = os.path.join(self.temp_file, "f_thiessen.shp")  # 消防站构建的泰森多边形
-        polygons_poi = os.path.join(self.temp_file, "polygons_poi.shp")  # 地块转点
+        polygons_poi = os.path.join(self.temp_file, "polygons_poi.shp")  # 地块转点 环卫评估已计算
         intersect_file = os.path.join(self.temp_file, "fp_intersects.shp")
         arcpy.env.extent = self.polygons
         arcpy.CreateThiessenPolygons_analysis(self.fire_station_poi, thiessen_shp, "ALL")
-        polygon2point(self.polygons, polygons_poi)
+        # polygon2point(self.polygons, polygons_poi)
 
         arcpy.Intersect_analysis([polygons_poi, thiessen_shp], intersect_file, "ALL", "", "")
         fire_dict = {}  # 消防站id、等级、消防员数量、设备数量
@@ -48,7 +48,7 @@ class S2(object):
             fc_row = fc_rows.next()
             if not fc_row:
                 break
-            if fc_row.Sta_Type_1 == 0:    # 该字段为0表示外围现有的消防用地
+            if fc_row.Sta_Type_1 == 0:  # 该字段为0表示外围现有的消防用地
                 fire_dict[fc_row.Temp1] = [fc_row.Shape_Area, fc_row.B_Area, fc_row.B_Area0]
             else:
                 fire_dict[fc_row.Temp1] = [
@@ -93,4 +93,3 @@ if __name__ == '__main__':
     }
 
     S2(config_dict)
-

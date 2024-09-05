@@ -19,15 +19,16 @@ class S1(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons = data_dict["polygons_for_planning"]
-        self.buffers = data_dict["buffers"]
-        self.temp_file = data_dict["temp_file_planning"]
+        self.polygons = data_dict['shp_path']["polygons_for_planning"]
+        self.buffers = data_dict['buffers']["fire_buffers"]
+        self.temp_file = data_dict['directories']["temp_file_planning"]
         self.fire_station = os.path.join(self.temp_file, "fire_station.shp")
 
         self.get_S1()
 
     def get_S1(self):
-        get_accessibility(self.polygons, self.fire_station, self.buffers, self.temp_file, count_name="S1")
+        get_accessibility(self.polygons, self.fire_station, self.buffers,
+                          self.temp_file, weight_index=500.0, count_name="S1")
         field_normalize(self.polygons, "S1", "nS1")
 
     def __iter__(self):

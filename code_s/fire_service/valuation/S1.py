@@ -6,9 +6,9 @@
 
 
 import os
-from code_s.tools.accessibility import get_accessibility
-from code_s.tools.data_manager import field_normalize, add_field
-from code_s.tools.accessibility_road import compute_time
+from code.tools.accessibility import get_accessibility
+from code.tools.data_manager import field_normalize, add_field
+from code.tools.accessibility_road import compute_time
 
 
 class S1(object):
@@ -20,9 +20,9 @@ class S1(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons = data_dict["polygons"]
-        self.buffers = data_dict["buffers"]
-        self.temp_file = data_dict["temp_file"]
+        self.polygons = data_dict['shp_path']["polygons"]
+        self.buffers = data_dict['buffers']["fire_buffers"]
+        self.temp_file = data_dict['directories']["temp_file"]
         # self.roads = data_dict["roads"]
         self.polygon_poi = os.path.join(self.temp_file, "polygons_poi.shp")
         self.fire_station = os.path.join(self.temp_file, "fire_station.shp")
@@ -31,7 +31,8 @@ class S1(object):
         self.get_S1()
 
     def get_S1(self):   # 缓冲区方法
-        get_accessibility(self.polygons, self.fire_station, self.buffers, self.temp_file, count_name="S1")
+        get_accessibility(self.polygons, self.fire_station, self.buffers,
+                          self.temp_file, weight_index=500.0, count_name="S1")
         field_normalize(self.polygons, "S1", "nS1")
 
     # def get_S1(self):   # 路网方法 计算结果存在问题

@@ -5,14 +5,20 @@
 # QQ       : 248404941
 # @File    : index.py
 import json
-import yaml
+import os.path
+import sys  # reload()之前必须要引入模块
+
 import pandas as pd
 import requests
+import shapefile
+import yaml
 from flask import Flask, render_template, jsonify, request
 from flask_restful import Api
-import numpy as np
 
-from geopandas.io.file import _read_file as read_file
+from code_s.start_planning import execute_planning
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 app = Flask(__name__)
 api = Api(app)
@@ -39,7 +45,7 @@ def index():
 
 
 @app.route('/fire_list')
-def list():
+def fire_list():
     # 1.2 消防设施列表
     kwargs = {
         "menu_group": 1,
@@ -52,19 +58,19 @@ def list():
 def evaluate():
     # 1.3 消防匹配度评估
     gdf_sorted = gdf.sort_values('C')
-    C = gdf_sorted.C.values.tolist()  # C 值 消防设施匹配度
+    c = gdf_sorted.C.values.tolist()  # C 值 消防设施匹配度
     bdr = gdf_sorted['boundary'].values
-    boundarys = []
+    boundary_arr = []
     for i in range(0, parts):
-        boundarys.append(bdr[i])
-    colorbar = get_colorbar()
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 1,
         "page_loc": "消防能力 / 消防匹配度评估",
-        "boundarys": boundarys,
-        "C": C,
-        "max_c": max(C),
-        "min_c": min(C),
+        "boundarys": boundary_arr,
+        "C": c,
+        "max_c": max(c),
+        "min_c": min(c),
         "colorbar": colorbar
     }
     return render_template('/1/item_fire_matching.html', **kwargs)
@@ -74,19 +80,19 @@ def evaluate():
 def given():
     # 1.4 消防供给评估
     gdf_sorted = gdf.sort_values('S')
-    S = gdf_sorted.S.values.tolist()  # S 值 消防供给
+    s = gdf_sorted.S.values.tolist()  # S 值 消防供给
     bdr = gdf_sorted['boundary'].values
-    boundarys = []
+    boundary_arr = []
     for i in range(0, parts):
-        boundarys.append(bdr[i])
-    colorbar = get_colorbar()
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 1,
         "page_loc": "消防能力 / 消防供给评估",
-        "boundarys": boundarys,
-        "S": S,
-        "max_s": max(S),
-        "min_s": min(S),
+        "boundarys": boundary_arr,
+        "S": s,
+        "max_s": max(s),
+        "min_s": min(s),
         "colorbar": colorbar
     }
     return render_template('/1/item_fire_given.html', **kwargs)
@@ -96,19 +102,19 @@ def given():
 def demand():
     # 1.5 消防需求评估
     gdf_sorted = gdf.sort_values('N')
-    N = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
     bdr = gdf_sorted['boundary'].values
-    boundarys = []
+    boundary_arr = []
     for i in range(0, parts):
-        boundarys.append(bdr[i])
-    colorbar = get_colorbar()
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 1,
         "page_loc": "消防能力 / 消防需求评估",
-        "boundarys": boundarys,
-        "N": N,
-        "max_n": max(N),
-        "min_n": min(N),
+        "boundarys": boundary_arr,
+        "N": n,
+        "max_n": max(n),
+        "min_n": min(n),
         "colorbar": colorbar
     }
     return render_template('/1/item_fire_demand.html', **kwargs)
@@ -118,19 +124,19 @@ def demand():
 def access():
     # 1.6 可达性评估
     gdf_sorted = gdf.sort_values('S1')
-    S1 = gdf_sorted.S1.values.tolist()  # S1 值  可达性
+    s1 = gdf_sorted.S1.values.tolist()  # S1 值  可达性
     bdr = gdf_sorted['boundary'].values
-    boundarys = []
+    boundary_arr = []
     for i in range(0, parts):
-        boundarys.append(bdr[i])
-    colorbar = get_colorbar()
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 1,
         "page_loc": "消防能力 / 可达性评估",
-        "boundarys": boundarys,
-        "S1": S1,
-        "max_S1": max(S1),
-        "min_S1": min(S1),
+        "boundarys": boundary_arr,
+        "S1": s1,
+        "max_S1": max(s1),
+        "min_S1": min(s1),
         "colorbar": colorbar
     }
     return render_template('/1/item_fire_access.html', **kwargs)
@@ -140,20 +146,20 @@ def access():
 def ability():
     # 1.7 消防站能力
     gdf_sorted = gdf.sort_values('nS2')
-    S2 = gdf_sorted.nS2.values.tolist()  # N1 值 消防站能力
+    s2 = gdf_sorted.nS2.values.tolist()  # N1 值 消防站能力
     bdr = gdf_sorted['boundary'].values
-    boundarys = []
+    boundary_arr = []
     for i in range(0, parts):
-        boundarys.append(bdr[i])
-    colorbar = get_colorbar()
+        boundary_arr.append(bdr[i])
+    color_bar = get_colorBar()
     kwargs = {
         "menu_group": 1,
         "page_loc": "消防能力 / 消防站能力",
-        "boundarys": boundarys,
-        "S2": S2,
-        "max_S2": max(S2),
-        "min_S2": min(S2),
-        "colorbar": colorbar
+        "boundarys": boundary_arr,
+        "S2": s2,
+        "max_S2": max(s2),
+        "min_S2": min(s2),
+        "colorbar": color_bar
     }
     return render_template('/1/item_fire_ability.html', **kwargs)
 
@@ -164,18 +170,18 @@ def pop_density():
     gdf_sorted = gdf.sort_values('N1')
     n1 = gdf_sorted.N1.values.tolist()  # N1 值 人口密度
     bdr = gdf_sorted['boundary'].values
-    boundarys = []
+    boundary_arr = []
     for i in range(0, parts):
-        boundarys.append(bdr[i])
-    colorbar = get_colorbar()
+        boundary_arr.append(bdr[i])
+    color_bar = get_colorBar()
     kwargs = {
         "menu_group": 1,
         "page_loc": "消防能力 / 人口密度",
-        "boundarys": boundarys,
+        "boundarys": boundary_arr,
         "n1": n1,
         "max_n1": max(n1),
         "min_n1": min(n1),
-        "colorbar": colorbar
+        "colorbar": color_bar
     }
     return render_template('/1/item_fire_pop_density.html', **kwargs)
 
@@ -184,19 +190,19 @@ def pop_density():
 def build_density():
     # 1.8 建筑密度
     gdf_sorted = gdf.sort_values('N2')
-    N2 = gdf_sorted.N2.values.tolist()
+    n2 = gdf_sorted.N2.values.tolist()
     bdr = gdf_sorted['boundary'].values
-    boundarys = []
+    boundary_arr = []
     for i in range(0, parts):
-        boundarys.append(bdr[i])
-    colorbar = get_colorbar()
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 1,
         "page_loc": "消防能力 / 建筑密度",
-        "boundarys": boundarys,
-        "N2": N2,
-        "max_N2": max(N2),
-        "min_N2": min(N2),
+        "boundarys": boundary_arr,
+        "N2": n2,
+        "max_N2": max(n2),
+        "min_N2": min(n2),
         "colorbar": colorbar
     }
     return render_template('/1/item_fire_build_density.html', **kwargs)
@@ -206,19 +212,19 @@ def build_density():
 def build_risk():
     # 1.9 火灾风险评估
     gdf_sorted = gdf.sort_values('N3')
-    N3 = gdf_sorted.N3.values.tolist()
+    n3 = gdf_sorted.N3.values.tolist()
     bdr = gdf_sorted['boundary'].values
-    boundarys = []
+    boundary_arr = []
     for i in range(0, parts):
-        boundarys.append(bdr[i])
-    colorbar = get_colorbar()
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 1,
         "page_loc": "消防能力 / 火灾风险评估",
-        "boundarys": boundarys,
-        "N3": N3,
-        "max_N3": max(N3),
-        "min_N3": min(N3),
+        "boundarys": boundary_arr,
+        "N3": n3,
+        "max_N3": max(n3),
+        "min_N3": min(n3),
         "colorbar": colorbar
     }
     return render_template('/1/item_fire_risk.html', **kwargs)
@@ -315,7 +321,7 @@ def san_service():
 
 
 @app.route('/fire_upload')
-def saneva():
+def san_eva():
     # 3.1 地块上传
     kwargs = {
         "menu_group": 3,
@@ -356,13 +362,13 @@ def san_evaluating():
 
 @app.route('/get_fire_fire_fight_services')
 def get_fire_fire_fight_services():
-    df = pd.read_excel(configs['excel_path']['fire_path'], usecols=["名称", "经度", "纬度"])
+    df_fire = pd.read_excel(configs['excel_path']['fire_path'], usecols=["名称", "经度", "纬度"])
     _data = []
-    for i, r in df.iterrows():
+    for i, record in df_fire.iterrows():
         _data.append({
             "id": str(i + 1),
-            'names': r[u'名称'],
-            'loc': [r[u'经度'], r[u'纬度']]
+            'names': record[u'名称'],
+            'loc': [record[u'经度'], record[u'纬度']]
         })
     data = {
         "code": 0,
@@ -377,28 +383,38 @@ def get_fire_fire_fight_services():
 @app.route('/fire_upload_do', methods=['POST'])
 def fire_upload_do():
     f = request.files.get('file')
-    f.save(configs['upload_path']['san'] + str(f.filename))
+    filename = os.path.join(configs['upload_path']['fire'], f.filename)
+    f.save(filename)
     return {'flag': True}
 
 
 @app.route('/san_upload_do', methods=['POST'])
 def san_upload_do():
     f = request.files.get('file')
-    f.save(configs['upload_path']['san'] + str(f.filename))
+    filename = os.path.join(configs['upload_path']['san'], f.filename)
+    f.save(filename)
     return {'flag': True}
+
+
+@app.route('/fire_evaluating_do', methods=['GET'])
+def fire_evaluating_do():
+    execute_planning()
+    return {
+        'flag': True,
+        '计算结果保存在': os.path.join(configs["result_file"], "planning_result.shp")
+    }
 
 
 @app.route('/get_sanitation')
 def get_sanitation():
-    file_path = configs['excel_path']['san_path']
-    df = pd.read_excel(fire_path, usecols=["地址", "名称", "经度", "纬度"])
+    df_san = pd.read_excel(configs['excel_path']['san_path'], usecols=["地址", "名称", "经度", "纬度"])
     _data = []
-    for i, r in df.iterrows():
+    for i, record in df_san.iterrows():
         _data.append({
             "id": str(i + 1),
-            'names': r[u'名称'],
-            'address': r[u'地址'],
-            'loc': [r[u'经度'], r[u'纬度']]
+            'names': record[u'名称'],
+            'address': record[u'地址'],
+            'loc': [record[u'经度'], record[u'纬度']]
         })
     data = {
         "code": 0,
@@ -417,50 +433,63 @@ def get_action(x):
     return y[-1]
 
 
-def get_colorbar():
-    colorbar = []  # colorbar 三色数组, 从 RGB(255, 0, 0) 渐变到 RGB(0, 0, 255)
+def get_colorBar():
+    color_bar = []  # colorbar 三色数组, 从 RGB(255, 0, 0) 渐变到 RGB(0, 0, 255)
     for i in range(0, parts):
         # 获取 红->蓝 渐变色
-        r = 255 + (0 - 255) / parts * i
-        g = 0
-        b = 0 + (255 - 0) / parts * i
-        colorbar.append([r, g, b])
-    return colorbar
+        red = 255 + (0 - 255) / parts * i
+        green = 0
+        blue = 0 + (255 - 0) / parts * i
+        color_bar.append([red, green, blue])
+    return color_bar
 
 
 def coord_convert():
-    boundarys = []
+    boundary_arr = []
+    boundary_84 = gdf.boundary_84.values.tolist()
     for i in range(0, parts):
-        polygon = np.array(gdf.geometry.boundary[i].xy).tolist()
-        boundary_len = len(polygon[0])
+        boundary_len = len(boundary_84[i])
         coors = ''
         for j in range(0, boundary_len):
-            coors += str(polygon[0][j]) + ',' + str(polygon[1][j]) + '|'
+            coors += str(boundary_84[i][j][0]) + ',' + str(boundary_84[i][j][1]) + '|'
         middle_url = coors[:-1]
         base_url = configs['amap']['base_url']
         last_url = '&coordsys=gps'
         url = base_url + middle_url + last_url
         response = requests.request('get', url)
-        map = json.loads(response.text)
-        boundary = map['locations'].split(';')
+        dic = json.loads(response.text)
+        boundary_elem = dic['locations'].split(';')
         bdr = []
         for k in range(0, boundary_len):
-            pt_str = boundary[k].split(',')
+            pt_str = boundary_elem[k].split(',')
             bdr.append([float(pt_str[0]), float(pt_str[1])])
-        boundarys.append(bdr)
-    return boundarys
+        boundary_arr.append(bdr)
+    return boundary_arr
 
 
 if __name__ == '__main__':
-    with open('../configs.yaml', 'r', encoding='utf-8', errors='ignore') as file:
-        content = file.read()
+    with open('../configs.yaml', 'r') as f_y:
+        content = f_y.read()
     configs = yaml.safe_load(content)
     fire_path = configs['shp_path']['fire_path']
     san_path = configs['shp_path']['san_path']
     fire_shp = configs['shp_path']['fire_shp']
-    gdf = read_file(fire_shp)
-    gdf = gdf.fillna(0)
+    spr = shapefile.Reader(fire_shp)
+    fields = []
+    flds = spr.fields[1:]
+    for field in flds:
+        fields.append(str(field[0]))
+    fields.append('boundary_84')  # 添加边界属性
+    df = pd.DataFrame(columns=fields)
+    for r in range(0, spr.numRecords):
+        row = spr.record(r)
+        row.append(spr.shape(r).points)
+        row_data = []
+        for col_index in range(0, len(row)):
+            row_data.append(row[col_index])
+        df.loc[r] = row_data
+    gdf = df
     parts = len(gdf)
-    boundary = coord_convert()   # 热启动
-    gdf['boundary'] = boundary   # 热启动
+    boundary = coord_convert()  # 热启动
+    gdf['boundary'] = boundary  # 热启动
     app.run()

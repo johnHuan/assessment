@@ -14,19 +14,46 @@ sys.setdefaultencoding('utf8')
 
 
 def get_year_risk(built_year):
-    year_list = built_year.split("年")
-    if int(year_list[0]) == 2000 and len(year_list) == 1:
-        return 0.75
-    elif int(year_list[0]) == 2000 and year_list[1] == "前":
+    # print(built_year)
+
+    if len(built_year.replace(" ", "")) == 0:
         return 1.0
-    elif int(year_list[0]) == 2000 and year_list[1] != "前":
+    year_int = int(built_year[0: 4: 1])
+    if year_int == 2000:
+        if len(built_year) == 4:
+            return 0.75
+        elif "前" in built_year:
+            return 1.0
+        else:
+            return 0.75
+    elif 2000 < year_int <= 2005:
         return 0.75
-    elif 2000 < int(year_list[0]) <= 2005:
-        return 0.75
-    elif 2005 < int(year_list[0]) <= 2015:
-        return 0.5
+    elif 2005 < year_int <= 2015:
+        return 0.50
+    elif year_int < 2000:
+        return 1.0
     else:
         return 0.25
+
+    # if "新建" in built_year:
+    #     built_year = built_year.replace("新建", "")
+    #
+    # year_list = built_year.split("年")
+
+    # if len(built_year.replace(" ", "")) == 0:
+    #     return 1.0
+    # elif int(year_list[0]) == 2000 and len(year_list) == 1:
+    #     return 0.75
+    # elif int(year_list[0]) == 2000 and year_list[1] == "前":
+    #     return 1.0
+    # elif int(year_list[0]) == 2000 and year_list[1] != "前":
+    #     return 0.75
+    # elif 2000 < int(year_list[0]) <= 2005:
+    #     return 0.75
+    # elif 2005 < int(year_list[0]) <= 2015:
+    #     return 0.5
+    # else:
+    #     return 0.25
 
 
 def get_fire_station_level(station_name):
@@ -44,10 +71,11 @@ def get_fire_station_level(station_name):
         return 40
 
 
-def create_gdb(output_path):
+def create_gdb(output_path, file_name="OD"):
     """
     创建OD成本矩阵的地理空间数据库
     :param output_path: 数据库所在位置
+    :param file_name: 数据库名称
     :return: 生成数据库的路径
     """
     if not os.path.isdir(output_path):
@@ -56,9 +84,9 @@ def create_gdb(output_path):
     # arcpy.env.workspace = output_path
     # arcpy.env.overwriteOutput = True
 
-    output_gdb = os.path.join(output_path, "OD.gdb")
+    output_gdb = os.path.join(output_path, file_name+r".gdb")
     if not arcpy.Exists(output_gdb):
-        arcpy.CreateFileGDB_management(output_path, "OD")
+        arcpy.CreateFileGDB_management(output_path, file_name)
 
     return output_gdb
 
@@ -224,15 +252,20 @@ def str_2_list(B_Types):
 
 
 if __name__ == '__main__':
-    arcpy.env.overwriteOutput = True
-    polygons_file0 = r"D:\lb\myCode\assessment\data\data_for_test\polygons\test.shp"
-    pop_raster0 = r"D:\lb\myCode\assessment\data\data_for_test\pop\hubei_pop.tif"
-    output_table0 = r"D:\lb\myCode\assessment\data\temp\pop.dbf"
-
-    # # select_express0 = r"'N_DLBM'='1310'"
-    # select_express0 = '"N_DLBM"' + "='1310'"
-    # selected_feature0 = r"D:\lb\myCode\assessment\data\temp\fire_station.shp"
+    # arcpy.env.overwriteOutput = True
+    # polygons_file0 = r"D:\lb\myCode\assessment\data\data_for_test\polygons\test.shp"
+    # pop_raster0 = r"D:\lb\myCode\assessment\data\data_for_test\pop\hubei_pop.tif"
+    # output_table0 = r"D:\lb\myCode\assessment\data\temp\pop.dbf"
     #
-    # select_feature(polygons_file0, select_express0, selected_feature0)
+    # # # select_express0 = r"'N_DLBM'='1310'"
+    # # select_express0 = '"N_DLBM"' + "='1310'"
+    # # selected_feature0 = r"D:\lb\myCode\assessment\data\temp\fire_station.shp"
+    # #
+    # # select_feature(polygons_file0, select_express0, selected_feature0)
+    #
+    # delete_polygon_fields(polygons_file0)
 
-    delete_polygon_fields(polygons_file0)
+    test_str = "2014新建"
+    test_str0 = test_str[0: 4: 1]
+    print(test_str0)
+

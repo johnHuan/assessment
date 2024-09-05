@@ -7,7 +7,10 @@
 
 import arcpy
 import os
+import gc
+import time
 from data_manager import add_field, polygon2point
+from file_helper import del_temp_file
 
 
 def feature_buffer(feature_file, buffer_file, buffer_distance):
@@ -22,7 +25,7 @@ def feature_buffer(feature_file, buffer_file, buffer_distance):
     arcpy.Buffer_analysis(feature_file, buffer_file, buffer_distance, "FULL", "ROUND", "NONE")
 
 
-def get_buffer_level(points_file, buffer_file, intersect_file, buffer_dis, buffer_level_dict):
+def get_buffer_level(points_file, buffer_file, intersect_file, buffer_dis, buffer_level_dict, weight_index):
     """
     计算点要素位于多少个要素的缓冲区内，并根据缓冲距离加权计分
     :param points_file: 输入点要素数据
@@ -30,11 +33,16 @@ def get_buffer_level(points_file, buffer_file, intersect_file, buffer_dis, buffe
     :param intersect_file: 点要素与缓冲区相交输出数据
     :param buffer_dis: 缓冲区距离
     :param buffer_level_dict: 点要素已有的得分字典
+    :param weight_index: 反距离权重因子
     :return: 更新后的点要素得分字典
     """
-    arcpy.Intersect_analysis([points_file, buffer_file], intersect_file, "ALL", "", "")
+    print(buffer_dis)
+    arcpy.Intersect_analysis([points_file, buffer_file],
+                             intersect_file, "ALL", "", "")
 
-    distance_weight = 1000.0 / float(buffer_dis)  # 单位是m
+    # time.sleep(50)   # 在部分设备上必须休眠一段时间，负责无法生成中间文件
+
+    distance_weight = weight_index / float(buffer_dis)  # 单位是m
     # print(distance_weight)
 
     fc_rows = arcpy.SearchCursor(intersect_file)
@@ -81,7 +89,7 @@ def update_polygon(polygons_file, buffer_num_dict, count_id="CCCID", count_name=
                                     expression_type="PYTHON_9.3", code_block="")
 
 
-def get_accessibility(polygons_file, station_file, buffer_distance, temp_file, count_id="CCCID", count_name="BNUM"):
+def get_accessibility(polygons_file, station_file, buffer_distance, temp_file, weight_index, count_id="CCCID", count_name="BNUM"):
     """
     计算简化后的可达性指标
     :param polygons_file: 输入地块数据
@@ -90,6 +98,7 @@ def get_accessibility(polygons_file, station_file, buffer_distance, temp_file, c
     :param temp_file: 临时文件夹位置
     :param count_id: 给定地块的标识符字段名
     :param count_name: 给定地块的缓冲区得分属性字段名
+    :param weight_index: 反距离权重因子
     :return:
     """
     points_file = os.path.join(temp_file, "center_points.shp")
@@ -101,8 +110,22 @@ def get_accessibility(polygons_file, station_file, buffer_distance, temp_file, c
 
     for dis in buffer_distance:
         feature_buffer(station_file, buffer_file, dis)
-        temp_dict = get_buffer_level(points_file, buffer_file, intersect_file, dis, buffer_num_dict)
-        buffer_num_dict = temp_dict
+        if min(buffer_distance) <= 1500.0:
+            temp_dict = get_buffer_level(points_file, buffer_file, intersect_file, dis, buffer_num_dict, weight_index)
+            buffer_num_dict = temp_dict
+        else:
+            buffers_dir = os.path.join(temp_file, "buffers")
+            del_temp_file(buffers_dir)
+            # arcpy.env.extent = buffer_file
+            arcpy.SplitByAttributes_analysis(buffer_file, buffers_dir, "ORIG_FID")
+            dir_list = os.listdir(buffers_dir)
+
+            for buffer_small in dir_list:
+                if buffer_small[-4: len(buffer_small): 1] == ".shp":
+                    buffer_small = os.path.join(buffers_dir, buffer_small)
+                    temp_dict = get_buffer_level(points_file, buffer_small, intersect_file,
+                                                 dis, buffer_num_dict, weight_index)
+                    buffer_num_dict = temp_dict
 
     # print(buffer_num_dict)
     update_polygon(polygons_file, buffer_num_dict, count_id, count_name)
@@ -113,8 +136,11 @@ def get_accessibility(polygons_file, station_file, buffer_distance, temp_file, c
 
 
 if __name__ == '__main__':
-    arcpy.env.overwriteOutput = True
-    polygons = r"D:\lb\myCode\accessibility_new\data\data_for_test\test.shp"
-    stations = r"D:\lb\myCode\accessibility_new\data\data_for_test\fire_station_poi.shp"
-    buffers = [100.0, 500.0, 1000.0, 2000.0, 5000.0]
-    # get_accessibility(polygons, stations, buffers)
+    # arcpy.env.overwriteOutput = True
+    # polygons = r"D:\lb\myCode\accessibility_new\data\data_for_test\test.shp"
+    # stations = r"D:\lb\myCode\accessibility_new\data\data_for_test\fire_station_poi.shp"
+    # buffers = [100.0, 500.0, 1000.0, 2000.0, 5000.0]
+    # # get_accessibility(polygons, stations, buffers)
+
+    dir_list0 = os.listdir(r"C:\Users\Administrator\Desktop\assessment\data\data_sources\pop")
+    print(dir_list0)

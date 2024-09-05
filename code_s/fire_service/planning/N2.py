@@ -19,7 +19,7 @@ class N2(object):
 
     def __init__(self, data_dict):
         self.fire_station = ""
-        self.polygons = data_dict["polygons_for_planning"]
+        self.polygons = data_dict['shp_path']["polygons_for_planning"]
 
         self.get_N2()
 

@@ -18,9 +18,9 @@ class N2_(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons = data_dict["polygons_for_planning"]
-        self.C = data_dict["C"]
-        self.A = data_dict["A"]
+        self.polygons = data_dict['shp_path']["polygons_for_planning"]
+        self.C = data_dict['parameters']["C"]
+        self.A = data_dict['parameters']["A"]
 
         self.get_N2_()
 
@@ -36,7 +36,7 @@ class N2_(object):
                 # print(str(fc_row.CA_Per))
                 fc_row.N2_ = 0
             else:
-                fc_row.N2_ = (fc_row.Area * fc_row.FAR / fc_row.CA_Per) * float(self.C) * float(self.A)
+                fc_row.N2_ = (fc_row.Area * fc_row.FAR / fc_row.CA_Per) * self.C * self.A
             fc_rows.updateRow(fc_row)
         del fc_rows
 

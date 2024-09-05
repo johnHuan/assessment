@@ -6,12 +6,13 @@
 
 
 import arcpy
+import gc
 from S1 import S1
 from S2 import S2
 from N1 import N1
 from N2 import N2
 from N3 import N3
-from code_s.tools.data_manager import add_field
+from code.tools.data_manager import add_field
 
 
 class Fire_SNC(object):
@@ -26,13 +27,32 @@ class Fire_SNC(object):
     def __init__(self, data_dict):
         print("\n正在评估消防服务能力...")
 
-        self.polygons = data_dict["polygons"]
+        self.polygons = data_dict['shp_path']["polygons"]
 
         S1(data_dict)
+        # del S1
+        gc.collect()
+        print("\nS1计算完成！")
+
         S2(data_dict)
+        # del S2
+        gc.collect()
+        print("\nS2计算完成！")
+
         N1(data_dict)
+        # del N1
+        gc.collect()
+        print("\nN1计算完成！")
+
         N2(data_dict)
+        # del N2
+        gc.collect()
+        print("\nN2计算完成！")
+
         N3(data_dict)
+        # del N3
+        gc.collect()
+        print("\nN3计算完成！\n")
 
         self.get_S()
         self.get_N()

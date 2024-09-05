@@ -6,7 +6,7 @@
 
 
 import arcpy
-from code_s.tools.data_manager import add_field, field_normalize
+from code.tools.data_manager import add_field, field_normalize
 
 
 class N2(object):
@@ -19,7 +19,7 @@ class N2(object):
 
     def __init__(self, data_dict):
         self.fire_station = ""
-        self.polygons = data_dict["polygons"]
+        self.polygons = data_dict['shp_path']["polygons"]
 
         self.get_N2()
 

@@ -19,7 +19,7 @@ class N1(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons = data_dict["polygons_for_planning"]
+        self.polygons = data_dict['shp_path']["polygons_for_planning"]
 
         self.get_N1()
 

@@ -18,16 +18,17 @@ class N1_(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons = data_dict["polygons"]
-        self.C = data_dict["C"]
-        self.A = data_dict["A"]
+        self.polygons = data_dict['shp_path']["polygons"]
+        self.C = data_dict['parameters']["C"]
+        self.A = data_dict['parameters']["A"]
 
         self.get_N1_()
 
     def get_N1_(self):
         add_field(self.polygons, "N1_", "DOUBLE")
         arcpy.CalculateField_management(in_table=self.polygons, field="N1_",
-                                        expression="!HW_N1! * (!Pop! * " + self.C + " * " + self.A + " / 1000.0)",
+                                        expression="!HW_N1! * (!Pop! * " + str(self.C)
+                                                   + " * " + str(self.A) + " / 1000.0)",
                                         expression_type="PYTHON_9.3", code_block="")
         field_normalize(self.polygons, "N1_", "nN1_")
 

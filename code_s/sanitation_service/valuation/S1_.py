@@ -20,9 +20,9 @@ class S1_(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons = data_dict["polygons"]
-        self.buffers = data_dict["buffers"]
-        self.temp_file = data_dict["temp_file"]
+        self.polygons = data_dict['shp_path']["polygons"]
+        self.buffers = data_dict['buffers']["collection_buffers"]
+        self.temp_file = data_dict['directories']["temp_file"]
         self.collection_station = os.path.join(self.temp_file, "garbage_collection_station.shp")
         self.collection_station_poi = os.path.join(self.temp_file, "garbage_collection_station_poi.shp")
 
@@ -30,8 +30,8 @@ class S1_(object):
         self.get_S12_()
 
     def get_S11_(self):
-        get_accessibility(self.polygons, self.collection_station,
-                          self.buffers, self.temp_file, count_name="S11_")
+        get_accessibility(self.polygons, self.collection_station, self.buffers,
+                          self.temp_file, weight_index=500.0, count_name="S11_")
         field_normalize(self.polygons, "S11_", "nS11_")
 
     def get_S12_(self):

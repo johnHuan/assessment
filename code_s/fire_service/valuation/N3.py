@@ -5,8 +5,8 @@
 # @Software : PyCharm
 
 
-from code_s.tools.accessibility import get_accessibility
-from code_s.tools.data_manager import field_normalize
+from code.tools.accessibility import get_accessibility
+from code.tools.data_manager import field_normalize
 
 
 class N3(object):
@@ -18,16 +18,16 @@ class N3(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.hazardous_facilities = data_dict["hazardous_facilities"]
-        self.hazard_buffers = data_dict["hazard_buffers"]
-        self.polygons = data_dict["polygons"]
-        self.temp_file = data_dict["temp_file"]
+        self.hazardous_facilities = data_dict['shp_path']["hazardous_facilities"]
+        self.hazard_buffers = data_dict['buffers']["hazard_buffers"]
+        self.polygons = data_dict['shp_path']["polygons"]
+        self.temp_file = data_dict['directories']["temp_file"]
 
         self.get_N3()
 
     def get_N3(self):
-        get_accessibility(self.polygons, self.hazardous_facilities,
-                          self.hazard_buffers, self.temp_file, count_name="N3")
+        get_accessibility(self.polygons, self.hazardous_facilities, self.hazard_buffers,
+                          self.temp_file, weight_index=200.0, count_name="N3")
         field_normalize(self.polygons, "N3", "nN3")
 
     def __iter__(self):

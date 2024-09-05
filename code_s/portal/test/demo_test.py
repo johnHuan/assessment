@@ -5,8 +5,10 @@
 # QQ       : 248404941
 # @File    : demo_test.py
 import pandas as pd
-from flask import Flask, render_template, jsonify
-from flask_restful import Api, Resource
+import shapefile
+import shpinfo as shpinfo
+# from flask import Flask, render_template, jsonify
+# from flask_restful import Api, Resource
 
 
 def test_data_handler():
@@ -228,17 +230,25 @@ def demo():
     print(data)
 
 
-from geopandas.io.file import _read_file as read_file
-from shapely.geometry import Point
+# from geopandas.io.file import _read_file as read_file
+# from shapely.geometry import Point
 import numpy as np
 
 if __name__ == '__main__':
     # path = r'D:\Research\Sanitation\assessment\result\valuation_result.shp'
     path = r'D:\Research\Sanitation\assessment\result\polygons\target.shp'
-    gdf = read_file(path)
-    # 提取每个点的经纬度坐标
-    #  gdf.geometry.boundary[0].xy
-    gdf = gdf.fillna(0)
+    spr = shapefile.Reader(path)
+    fields = []
+    f = spr.fields[1:]
+    for field in f:
+        fields.append(str(field[0]))
+    fields.append('boundary')  # 添加边界属性
+    df = pd.DataFrame(columns=fields)
+    for r in range(0, spr.numRecords):
+        row = spr.record(r)
+        row.append(spr.shape(r).points)
+        df.loc[r] = row
+    gdf = df
     parts = len(gdf)
     S1 = gdf.S1.values  # S1 值  可达性
     S = gdf.S.values  # S 值 消防供给
@@ -246,10 +256,6 @@ if __name__ == '__main__':
     N = gdf.N.values  # N 值 消防需求
     n1 = gdf.N1.values  # N1 值 人口密度
     N2 = gdf.N2.values  # N2 值 建筑密度
-    boundarys = []
-    for i in range(1, parts):
-        polygon = np.array(gdf.geometry.boundary[i].xy).tolist()
-        boundarys.append(polygon)
     far = gdf.FAR.values  # FAR 值
     pop = gdf.POP.values  # POP 值
     Area = gdf.POP.values  # Area 值
@@ -273,4 +279,3 @@ if __name__ == '__main__':
     nS11_ = gdf.nS11_.values  # C 值
     S12_ = gdf.S12_.values  # C 值
 
-    print(boundarys)

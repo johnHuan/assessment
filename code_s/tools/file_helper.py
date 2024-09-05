@@ -8,6 +8,8 @@
 import arcpy
 import os
 import pandas as pd
+import yaml
+
 from data_manager import add_field
 
 
@@ -33,22 +35,31 @@ def read_configs(configs_file):
     :param configs_file: 输入配置文件
     :return: 配置项字典
     """
-    config_dict = {}
-    with open(configs_file, 'r') as configs:
-        for line in configs:
-            if len(line.replace(" ", "")) < 4 or line[0] == "#":
-                continue
-            # print(len(line))
-            config = line.split(": ")
-            config_value = config[1].split("#")
-            config_dict[config[0].replace(" ", "")] = config_value[0].replace(" ", "")
-            if config[0] == "buffers" or config[0] == "hazard_buffers":
-                buffer_list = []
-                for dis in config_value[0].split(","):
-                    buffer_list.append(float(dis))
-                config_dict[config[0]] = buffer_list
+    # config_dict = {}
+    # with open(configs_file, 'r') as configs:
+    #     for line in configs:
+    #         if len(line.replace(" ", "")) < 4 or line[0] == "#":
+    #             continue
+    #         # print(len(line))
+    #         config = line.split(": ")
+    #         config_value = config[1].split("#")
+    #         config_dict[config[0].replace(" ", "")] = config_value[0].replace(" ", "")
+    #         if config[0] == "fire_buffers" or config[0] == "hazard_buffers" \
+    #                 or config[0] == "collection_buffers" or config[0] == "transfer_buffers":
+    #             buffer_list = []
+    #             for dis in config_value[0].split(","):
+    #                 buffer_list.append(float(dis))
+    #             config_dict[config[0]] = buffer_list
+    #
+    # del configs
 
-    del configs
+    with open(configs_file, 'r') as config_path:
+        content = config_path.read()
+    config_dict = yaml.safe_load(content)
+    # for key in config_dict['buffers'].keys():
+    #     if '_buffers' in key:
+    #         config_dict['buffers'][key] = [float(item) for item in config_dict['buffers'][key].split(',')]
+
     print("配置文件读取完成：")
     for key in config_dict.keys():
         print("{}: {}".format(key, config_dict[key]))

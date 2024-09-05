@@ -7,7 +7,7 @@
 
 import os
 import arcpy
-from code_s.tools.data_manager import polygon2point, add_field, field_normalize
+from code.tools.data_manager import polygon2point, add_field, field_normalize
 
 
 class S2(object):
@@ -20,8 +20,8 @@ class S2(object):
 
     def __init__(self, data_dict):
         self.fire_station = ""
-        self.polygons = data_dict["polygons"]
-        self.temp_file = data_dict["temp_file"]
+        self.polygons = data_dict['shp_path']["polygons"]
+        self.temp_file = data_dict['directories']["temp_file"]
         self.fire_station = os.path.join(self.temp_file, "fire_station.shp")    # 数据准备阶段已计算完成
         self.fire_station_poi = os.path.join(self.temp_file, "fire_station_poi.shp")
 
@@ -31,11 +31,11 @@ class S2(object):
     def fire_station_allocate(self):
         polygon2point(self.fire_station, self.fire_station_poi)
         thiessen_shp = os.path.join(self.temp_file, "f_thiessen.shp")  # 消防站构建的泰森多边形
-        polygons_poi = os.path.join(self.temp_file, "polygons_poi.shp")  # 地块转点
+        polygons_poi = os.path.join(self.temp_file, "polygons_poi.shp")  # 地块转点 环卫评估已计算
         intersect_file = os.path.join(self.temp_file, "fp_intersects.shp")
         arcpy.env.extent = self.polygons
         arcpy.CreateThiessenPolygons_analysis(self.fire_station_poi, thiessen_shp, "ALL")
-        polygon2point(self.polygons, polygons_poi)
+        # polygon2point(self.polygons, polygons_poi)
 
         arcpy.Intersect_analysis([polygons_poi, thiessen_shp], intersect_file, "ALL", "", "")
         fire_dict = {}  # 消防站id、等级、消防员数量、设备数量

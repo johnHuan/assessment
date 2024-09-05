@@ -20,9 +20,9 @@ class S2_(object):
         return cls._instance
 
     def __init__(self, data_dict):
-        self.polygons = data_dict["polygons_for_planning"]
-        self.buffers = data_dict["buffers"]
-        self.temp_file = data_dict["temp_file_planning"]
+        self.polygons = data_dict['shp_path']["polygons_for_planning"]
+        self.buffers = data_dict['buffers']["transfer_buffers"]
+        self.temp_file = data_dict['directories']["temp_file_planning"]
         self.transfer_station = os.path.join(self.temp_file, "garbage_transfer_station.shp")
         self.transfer_station_poi = os.path.join(self.temp_file, "garbage_transfer_station_poi.shp")
 
@@ -30,8 +30,8 @@ class S2_(object):
         self.get_S22_()
 
     def get_S21_(self):
-        get_accessibility(self.polygons, self.transfer_station,
-                          self.buffers, self.temp_file, count_name="S21_")
+        get_accessibility(self.polygons, self.transfer_station, self.buffers,
+                          self.temp_file, weight_index=2000.0, count_name="S21_")
         field_normalize(self.polygons, "S21_", "nS21_")
 
     def get_S22_(self):
@@ -39,6 +39,7 @@ class S2_(object):
         thiessen_shp = os.path.join(self.temp_file, "t_thiessen.shp")  # 垃圾转运站构建的泰森多边形
         polygons_poi = os.path.join(self.temp_file, "polygons_poi.shp")  # 地块转点（在消防评估中已完成）
         intersect_file = os.path.join(self.temp_file, "tp_intersects.shp")
+        polygon2point(self.polygons, polygons_poi)
         arcpy.env.extent = self.polygons
         arcpy.CreateThiessenPolygons_analysis(self.transfer_station_poi, thiessen_shp, "ALL")
 
