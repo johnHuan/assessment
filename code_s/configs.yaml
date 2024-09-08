@@ -22,8 +22,8 @@ excel_path:
   per_capita_service_area:  D:/Research/Sanitation/assessment/data/data_for_test/tables/per_capita_service_area.xlsx  # 人均服务面积表
   N_extent:  D:/Research/Sanitation/assessment/data/data_for_test/tables/N_extent.xlsx  # N计算范围
   fire_risk_weights:  D:/Research/Sanitation/assessment/data/data_for_test/tables/fire_risk_weights.xlsx  # 用地消防风险系数表
-  fire_path: D:/Research/Sanitation/assessment/code_s/portal/data/fire_fightings.xlsx  # 消防站、环卫站数据存放的目录
-  san_path: D:/Research/Sanitation/assessment/code_s/portal/data/sanitations.xlsx  # 消防站、环卫站数据存放的目录
+  fire_path: D:/Research/Sanitation/assessment/code_s/data/fire_fightings.xlsx  # 消防站、环卫站数据存放的目录
+  san_path: D:/Research/Sanitation/assessment/code_s/data/sanitations.xlsx  # 消防站、环卫站数据存放的目录
 buffers:
   fire_buffers: [500.0, 1000.0, 1500.0, 2000.0, 2500.0]  # 计算消防站可达性S的多级缓冲区的缓冲半径（米）
   collection_buffers: [500.0, 1000.0, 1500.0, 2000.0]  # 计算垃圾收集站可达性S的多级缓冲区的缓冲半径（米）

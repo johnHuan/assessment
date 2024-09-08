@@ -5,8 +5,8 @@
 # @Software : PyCharm
 
 
-from code.tools.accessibility import get_accessibility
-from code.tools.data_manager import field_normalize
+from code_s.tools.accessibility import get_accessibility
+from code_s.tools.data_manager import field_normalize
 
 
 class N3(object):

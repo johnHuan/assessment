@@ -7,7 +7,7 @@
 
 import os
 import arcpy
-from code.tools.data_manager import polygon2point, add_field, field_normalize
+from code_s.tools.data_manager import polygon2point, add_field, field_normalize
 
 
 class S2(object):

@@ -17,7 +17,7 @@ from tools.data_prepare import Valuation_Preparation
 from tools.file_helper import read_configs, del_temp_file
 
 
-def execute_planning():
+def execute_valuation():
     time_start = time.time()  # 记录开始时间
     arcpy.env.overwriteOutput = True  # 允许覆盖原有数据  ！！！非常重要！！！
 
@@ -26,16 +26,16 @@ def execute_planning():
 
     del_temp_file(config_dict['directories']["temp_file"])  # 删除临时文件夹中现有数据
 
-    Valuation_Preparation(config_dict)  # 数据预处理
-    del Valuation_Preparation
+    vp = Valuation_Preparation(config_dict)  # 数据预处理
+    del vp
     gc.collect()
 
-    Sanitation_SNC(config_dict)  # 环卫服务能力评估
-    del Sanitation_SNC
+    ss = Sanitation_SNC(config_dict)  # 环卫服务能力评估
+    del ss
     gc.collect()
 
-    Fire_SNC(config_dict)  # 消防服务能力评估
-    del Fire_SNC
+    fs = Fire_SNC(config_dict)  # 消防服务能力评估
+    del fs
     gc.collect()
 
     # 将计算完成的地块文件复制到结果文件夹

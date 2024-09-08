@@ -32,18 +32,17 @@
                 </dl>
             </li>
             <li class="layui-nav-item {% if menu_group == 3 %} layui-nav-itemed {% endif %}">
-                <a class="layui-icon layui-icon-template-1" href="javascript:void(0);"> 消防规划评估</a>
-                <dl class="layui-nav-child" style="text-indent: 20px;">
-                    <dd><a class="layui-icon layui-icon-upload {% if request.url|get_action == 'fire_upload' %} layui-this {% endif %}" href="/fire_upload"> 地块上传</a></dd>
-                    <dd><a class="layui-icon layui-icon-play {% if request.url|get_action == 'fire_evaluating' %} layui-this {% endif %}" href="/fire_evaluating"> 开始评估</a></dd>
-                </dl>
+<!--                <a class="layui-icon layui-icon-template-1" href="javascript:void(0);"> 消防规划评估</a>-->
+                <a class="layui-icon layui-icon-template-1 {% if request.url|get_action == 'fire_evaluating' %} layui-this {% endif %}" href="/fire_evaluating"> 消防规划评估</a>
             </li>
             <li class="layui-nav-item {% if menu_group == 4 %} layui-nav-itemed {% endif %}">
-                <a class="layui-icon layui-icon-tabs" href="javascript:void(0);"> 环卫规划评估</a>
+                <a class="layui-icon layui-icon-tabs {% if request.url|get_action == 'san_evaluating' %} layui-this {% endif %}" href="/san_evaluating"> 环卫规划评估</a>
+                <!--
                 <dl class="layui-nav-child" style="text-indent: 20px;">
                     <dd><a class="layui-icon layui-icon-upload {% if request.url|get_action == 'san_upload' %} layui-this {% endif %}" href="/san_upload"> 地块上传</a></dd>
                     <dd><a class="layui-icon layui-icon-play {% if request.url|get_action == 'san_evaluating' %} layui-this {% endif %}" href="/san_evaluating"> 开始评估</a></dd>
                 </dl>
+                -->
             </li>
         </ul>
     </div>

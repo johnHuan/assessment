@@ -6,7 +6,8 @@
 # @File    : demo_test.py
 import pandas as pd
 import shapefile
-import shpinfo as shpinfo
+
+
 # from flask import Flask, render_template, jsonify
 # from flask_restful import Api, Resource
 
@@ -217,7 +218,7 @@ def test_data_handler():
 
 
 def demo():
-    data_path = 'D:/Research/Sanitation/assessment/code_s/portal/data/'
+    data_path = '/code_s/portal/data/'
     df = pd.read_excel(data_path + 'fire_fightings.xlsx', usecols=["名称", "经度", "纬度"])
     # pd.read_excel(data_path + 'sanitations.xlsx', usecols=["地址", "名称", "经度", "纬度"])
     data = []
@@ -236,7 +237,7 @@ import numpy as np
 
 if __name__ == '__main__':
     # path = r'D:\Research\Sanitation\assessment\result\valuation_result.shp'
-    path = r'D:\Research\Sanitation\assessment\result\polygons\target.shp'
+    path = r'/result/polygons/target.shp'
     spr = shapefile.Reader(path)
     fields = []
     f = spr.fields[1:]
@@ -278,4 +279,3 @@ if __name__ == '__main__':
     S11_ = gdf.S11_.values  # C 值
     nS11_ = gdf.nS11_.values  # C 值
     S12_ = gdf.S12_.values  # C 值
-

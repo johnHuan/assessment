@@ -1,5 +1,6 @@
-# coding=utf-8
-# @Time : 2024/7/9 16:22
-# @Author : Trifurs
-# @File : __init__.py
-# @Software : PyCharm
+# -*- coding: utf-8 -*-
+# @Time    : 2024/9/8 10:59
+# @Author  : Zhang Huan
+# @Email   : johnhuan@whu.edu.cn
+# QQ       : 248404941
+# @File    : __init__.py

@@ -12,7 +12,7 @@ from S2 import S2
 from N1 import N1
 from N2 import N2
 from N3 import N3
-from code.tools.data_manager import add_field
+from code_s.tools.data_manager import add_field
 
 
 class Fire_SNC(object):

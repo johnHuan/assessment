@@ -16,6 +16,7 @@ from flask import Flask, render_template, jsonify, request
 from flask_restful import Api
 
 from code_s.start_planning import execute_planning
+from code_s.start_valuation import execute_valuation
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -31,6 +32,7 @@ def empty():
         "menu_group": 1,
         "page_loc": "消防能力 / 消防设施分布图"
     }
+    #                       /1/item_index.html
     return render_template('/1/item_index.html', **kwargs)
 
 
@@ -253,9 +255,21 @@ def san_list():
 @app.route('/san_matching')
 def san_matching():
     # 2.3 环卫匹配度评估
+    gdf_sorted = gdf.sort_values('C')
+    c = gdf_sorted.C.values.tolist()  # C 值 消防设施匹配度
+    bdr = gdf_sorted['boundary'].values
+    boundary_arr = []
+    for i in range(0, parts):
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 2,
-        "page_loc": "环卫能力 / 环卫匹配度评估"
+        "page_loc": "环卫能力 / 环卫匹配度评估",
+        "boundarys": boundary_arr,
+        "C": c,
+        "max_c": max(c),
+        "min_c": min(c),
+        "colorbar": colorbar
     }
     return render_template('/2/item_san_matching.html', **kwargs)
 
@@ -263,9 +277,21 @@ def san_matching():
 @app.route('/san_given')
 def san_given():
     # 2.4 环卫供给评估
+    gdf_sorted = gdf.sort_values('S')
+    s = gdf_sorted.S.values.tolist()  # S 值 消防供给
+    bdr = gdf_sorted['boundary'].values
+    boundary_arr = []
+    for i in range(0, parts):
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 2,
-        "page_loc": "环卫能力 / 环卫供给评估"
+        "page_loc": "环卫能力 / 环卫供给评估",
+        "boundarys": boundary_arr,
+        "S": s,
+        "max_s": max(s),
+        "min_s": min(s),
+        "colorbar": colorbar
     }
     return render_template('/2/item_san_given.html', **kwargs)
 
@@ -273,9 +299,21 @@ def san_given():
 @app.route('/san_demand')
 def san_demand():
     # 2.5 环卫需求评估
+    gdf_sorted = gdf.sort_values('N')
+    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    bdr = gdf_sorted['boundary'].values
+    boundary_arr = []
+    for i in range(0, parts):
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 2,
-        "page_loc": "环卫能力 / 环卫需求评估"
+        "page_loc": "环卫能力 / 环卫需求评估",
+        "boundarys": boundary_arr,
+        "N": n,
+        "max_n": max(n),
+        "min_n": min(n),
+        "colorbar": colorbar
     }
     return render_template('/2/item_san_demand.html', **kwargs)
 
@@ -283,9 +321,21 @@ def san_demand():
 @app.route('/san_collection')
 def san_collection():
     # 2.6 收集能力
+    gdf_sorted = gdf.sort_values('N')
+    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    bdr = gdf_sorted['boundary'].values
+    boundary_arr = []
+    for i in range(0, parts):
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 2,
-        "page_loc": "环卫能力 / 收集能力"
+        "page_loc": "环卫能力 / 收集能力",
+        "boundarys": boundary_arr,
+        "N": n,
+        "max_n": max(n),
+        "min_n": min(n),
+        "colorbar": colorbar
     }
     return render_template('/2/item_san_collection.html', **kwargs)
 
@@ -293,9 +343,21 @@ def san_collection():
 @app.route('/san_transfer')
 def san_transfer():
     # 2.7 转运能力
+    gdf_sorted = gdf.sort_values('N')
+    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    bdr = gdf_sorted['boundary'].values
+    boundary_arr = []
+    for i in range(0, parts):
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 2,
-        "page_loc": "环卫能力 / 转运能力"
+        "page_loc": "环卫能力 / 转运能力",
+        "boundarys": boundary_arr,
+        "N": n,
+        "max_n": max(n),
+        "min_n": min(n),
+        "colorbar": colorbar
     }
     return render_template('/2/item_san_transfer.html', **kwargs)
 
@@ -303,9 +365,21 @@ def san_transfer():
 @app.route('/san_citizen')
 def san_citizen():
     # 2.8 常驻人口
+    gdf_sorted = gdf.sort_values('N')
+    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    bdr = gdf_sorted['boundary'].values
+    boundary_arr = []
+    for i in range(0, parts):
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 2,
-        "page_loc": "环卫能力 / 常驻人口"
+        "page_loc": "环卫能力 / 常驻人口",
+        "boundarys": boundary_arr,
+        "N": n,
+        "max_n": max(n),
+        "min_n": min(n),
+        "colorbar": colorbar
     }
     return render_template('/2/item_san_citizen.html', **kwargs)
 
@@ -313,49 +387,49 @@ def san_citizen():
 @app.route('/san_service')
 def san_service():
     # 2.9 服务人口
+    gdf_sorted = gdf.sort_values('N')
+    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    bdr = gdf_sorted['boundary'].values
+    boundary_arr = []
+    for i in range(0, parts):
+        boundary_arr.append(bdr[i])
+    colorbar = get_colorBar()
     kwargs = {
         "menu_group": 2,
-        "page_loc": "环卫能力 / 服务人口"
+        "page_loc": "环卫能力 / 服务人口",
+        "boundarys": boundary_arr,
+        "N": n,
+        "max_n": max(n),
+        "min_n": min(n),
+        "colorbar": colorbar
     }
     return render_template('/2/item_san_service.html', **kwargs)
 
 
-@app.route('/fire_upload')
-def san_eva():
-    # 3.1 地块上传
-    kwargs = {
-        "menu_group": 3,
-        "page_loc": "消防规划评估 / 地块上传"
-    }
-    return render_template('/3/item_fire_upload.html', **kwargs)
-
-
 @app.route('/fire_evaluating')
 def fire_evaluating():
-    # 3.2 开始评估
+    # 3 消防评估
+    with open('info.json', 'r') as fcc_file:
+        json_data = json.load(fcc_file)
+    required_file = json_data["required_file"]
     kwargs = {
         "menu_group": 3,
-        "page_loc": "消防规划评估 / 开始评估"
+        "page_loc": "消防规划评估",
+        "required_file": required_file
     }
     return render_template('/3/item_fire_evaluating.html', **kwargs)
 
 
-@app.route('/san_upload')
-def san_upload():
-    # 4.1 开始评估
-    kwargs = {
-        "menu_group": 4,
-        "page_loc": "环卫规划评估 / 地块上传"
-    }
-    return render_template('/4/item_san_upload.html', **kwargs)
-
-
 @app.route('/san_evaluating')
 def san_evaluating():
-    # 4.2 开始评估
+    # 4 环卫评估
+    with open('info.json', 'r') as fcc_file:
+        json_data = json.load(fcc_file)
+    required_file = json_data["required_file"]
     kwargs = {
         "menu_group": 4,
-        "page_loc": "环卫规划评估 / 开始评估"
+        "page_loc": "环卫规划评估",
+        "required_file": required_file
     }
     return render_template('/4/item_san_evaluating.html', **kwargs)
 
@@ -399,6 +473,15 @@ def san_upload_do():
 @app.route('/fire_evaluating_do', methods=['GET'])
 def fire_evaluating_do():
     execute_planning()
+    return {
+        'flag': True,
+        '计算结果保存在': os.path.join(configs["result_file"], "planning_result.shp")
+    }
+
+
+@app.route('/san_evaluating_do', methods=['GET'])
+def san_evaluating_do():
+    execute_valuation()
     return {
         'flag': True,
         '计算结果保存在': os.path.join(configs["result_file"], "planning_result.shp")
@@ -468,7 +551,7 @@ def coord_convert():
 
 
 if __name__ == '__main__':
-    with open('../configs.yaml', 'r') as f_y:
+    with open('configs.yaml', 'r') as f_y:
         content = f_y.read()
     configs = yaml.safe_load(content)
     fire_path = configs['shp_path']['fire_path']
