@@ -299,8 +299,8 @@ def san_given():
 @app.route('/san_demand')
 def san_demand():
     # 2.5 环卫需求评估
-    gdf_sorted = gdf.sort_values('N')
-    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    gdf_sorted = gdf.sort_values('N_')
+    n_ = gdf_sorted.N_.values.tolist()  # N 值 消防需求
     bdr = gdf_sorted['boundary'].values
     boundary_arr = []
     for i in range(0, parts):
@@ -310,9 +310,9 @@ def san_demand():
         "menu_group": 2,
         "page_loc": "环卫能力 / 环卫需求评估",
         "boundarys": boundary_arr,
-        "N": n,
-        "max_n": max(n),
-        "min_n": min(n),
+        "N": n_,
+        "max_n": max(n_),
+        "min_n": min(n_),
         "colorbar": colorbar
     }
     return render_template('/2/item_san_demand.html', **kwargs)
@@ -321,8 +321,8 @@ def san_demand():
 @app.route('/san_collection')
 def san_collection():
     # 2.6 收集能力
-    gdf_sorted = gdf.sort_values('N')
-    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    gdf_sorted = gdf.sort_values('S12_')
+    s12_ = gdf_sorted.S12_.values.tolist()  # N 值 消防需求
     bdr = gdf_sorted['boundary'].values
     boundary_arr = []
     for i in range(0, parts):
@@ -332,9 +332,9 @@ def san_collection():
         "menu_group": 2,
         "page_loc": "环卫能力 / 收集能力",
         "boundarys": boundary_arr,
-        "N": n,
-        "max_n": max(n),
-        "min_n": min(n),
+        "N": s12_,
+        "max_n": max(s12_),
+        "min_n": min(s12_),
         "colorbar": colorbar
     }
     return render_template('/2/item_san_collection.html', **kwargs)
@@ -343,8 +343,8 @@ def san_collection():
 @app.route('/san_transfer')
 def san_transfer():
     # 2.7 转运能力
-    gdf_sorted = gdf.sort_values('N')
-    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    gdf_sorted = gdf.sort_values('S2_')
+    s2_ = gdf_sorted.S2_.values.tolist()  # N 值 消防需求
     bdr = gdf_sorted['boundary'].values
     boundary_arr = []
     for i in range(0, parts):
@@ -354,9 +354,9 @@ def san_transfer():
         "menu_group": 2,
         "page_loc": "环卫能力 / 转运能力",
         "boundarys": boundary_arr,
-        "N": n,
-        "max_n": max(n),
-        "min_n": min(n),
+        "N": s2_,
+        "max_n": max(s2_),
+        "min_n": min(s2_),
         "colorbar": colorbar
     }
     return render_template('/2/item_san_transfer.html', **kwargs)
@@ -365,8 +365,8 @@ def san_transfer():
 @app.route('/san_citizen')
 def san_citizen():
     # 2.8 常驻人口
-    gdf_sorted = gdf.sort_values('N')
-    n = gdf_sorted.N.values.tolist()  # N 值 消防需求
+    gdf_sorted = gdf.sort_values('N1_')
+    n1_ = gdf_sorted.N1_.values.tolist()  # N 值 消防需求
     bdr = gdf_sorted['boundary'].values
     boundary_arr = []
     for i in range(0, parts):
@@ -376,9 +376,9 @@ def san_citizen():
         "menu_group": 2,
         "page_loc": "环卫能力 / 常驻人口",
         "boundarys": boundary_arr,
-        "N": n,
-        "max_n": max(n),
-        "min_n": min(n),
+        "N": n1_,
+        "max_n": max(n1_),
+        "min_n": min(n1_),
         "colorbar": colorbar
     }
     return render_template('/2/item_san_citizen.html', **kwargs)
