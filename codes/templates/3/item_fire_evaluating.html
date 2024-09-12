@@ -1,0 +1,300 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<!-- 这里是子模板填充的内容 -->
+<div class="layui-body" style="padding: 15px;">
+    <blockquote class="layui-elem-quote layui-text">
+        {{ page_loc }}
+    </blockquote>
+    <div class="layui-card-body">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md6">
+                <div class="layui-card" style="border: 0.2px solid #eee">
+                    <div class="layui-card-header  layui-bg-gray">地块上传 <span class="layui-badge" style="height: 20px; line-height: 20px; font-size: 14px;">提示： 上传与shp有关的所有同名文件!!</span></div>
+                    <div class="layui-card-body">
+                        <div id="ID-upload-btn-drag" class="layui-upload-drag" style="display: block; width: 60%px; height: 100px; padding: 25px 0 0 0; margin: 0 auto;" >
+                            <i class="layui-icon layui-icon-upload"></i>
+                            <div>点击上传，或将文件拖拽到此处</div>
+                            <div class="layui-hide" id="ID-upload-demo-preview">
+                                <hr>
+                                <img src="" alt="上传成功后渲染" style="max-width: 100%; height: 100px;">
+                            </div>
+                        </div>
+                        <div class="layui-panel layui-hide" id="id-preview-info" style="padding: 20px 40px; margin-top: 30px;"></div>
+                        <button type="button" style="margin: 20px 0 0 0;" class="layui-btn" id="ID-upload-files-btn-action">开始上传</button>
+                        <!--
+                        <button type="button" style="margin-top: 10px;" class="layui-btn layui-col-md4 layui-btn-disabled" id="ID-upload-demo-action">开始上传</button>
+                        <div id="error-box" class="layui-panel layui-hide">
+                            <div id="error_info" class="layui-bg-red" style="padding: 32px;"></div>
+                        </div>
+                        <div id="progress" class="layui-hide layui-progress layui-progress-big" lay-showpercent="true" lay-filter="progress">
+                            <div class="layui-progress-bar" lay-percent=""></div>
+                        </div>
+                        -->
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-card" style="border: 0.2px solid #eee">
+                    <div class="layui-card-header layui-bg-gray">地块上传信息展示</div>
+                    <div class="layui-card-body">
+                        <div class="layui-upload-list">
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col style="min-width: 100px;">
+                                    <col width="150">
+                                    <col width="260">
+                                    <col width="150">
+                                </colgroup>
+                                <thead>
+                                    <th>文件名</th>
+                                    <th>大小</th>
+                                    <th>上传进度</th>
+                                    <th>操作</th>
+                                </thead>
+                                <tbody id="ID-upload-files-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md6">
+                <div class="layui-card" style="border: 0.2px solid #eee">
+                    <div class="layui-card-header layui-bg-gray">评估进度展示</div>
+                    <div class="layui-card-body">
+                       <button class="layui-btn" id="btn-evaluating">开始评估</button>
+                        <span style="margin-left: 20px;" id="evaluating_status"></span>
+                        <i id="evaluating-icon-done" class="layui-hide layui-icon layui-icon-success" style="font-size: 30px; color: #1E9FFF;"></i>
+                        <i id="evaluating-icon-loading" class="layui-hide layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop" style="font-size: 30px; color: #1E9FFF;"></i>
+                        <div id="progress_evaluating" class="layui-hide layui-progress layui-progress-big" lay-showpercent="true" lay-filter="progress">
+                            <div class="layui-progress-bar" lay-percent=""></div>
+                        </div>
+                        <div class="layui-panel log" style="margin: 20px 0;">
+                            <div class="log_text" id='log_list'>
+                                <div id="log_text"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-card" style="border: 0.2px solid #eee">
+                    <div class="layui-card-header layui-bg-gray">评估所需的必要文件，这些文件不用额外上传，默认系统内置！</div>
+                    <div class="layui-card-body">
+                        <div class="layui-upload-list">
+                            <table class="layui-table">
+                                <colgroup>
+                                    <col>
+                                    <col>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                    <th>序号</th>
+                                    <th>名称</th>
+                                    <th>说明</th>
+                                </thead>
+                                <tbody>
+                                    {% for elem in required_file %}
+                                        <tr>
+                                            <td>{{ loop.index }}</td>
+                                            <td>{{ elem['file'] }}</td>
+                                            <td>{{ elem['info'] }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+    </div>
+</div>
+<style>
+     .log{
+            width: 98%;
+            height: 400px;
+            background-color: #FFFFFF;
+            margin: 0 auto;
+            margin-top: 10px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .log_text{
+            height: 400px;
+            margin-left: 8px;
+            font-size: 12px;
+            color: #666666;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+</style>
+<script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/socket.io.js') }}"></script>
+
+<script>
+layui.use(['upload', 'element', 'layer'], function(){
+    var upload = layui.upload;
+    var form = layui.form;
+    var layer = layui.layer;
+    var element = layui.element;
+    var $ = layui.$;
+    // 渲染上传
+    // 制作多文件上传表格
+    var uploadListIns = upload.render({
+        elem: '#ID-upload-btn-drag',
+        elemList: $('#ID-upload-files-list'), // 列表元素对象
+        url: '/fire_upload_do', // 实际使用时改成您自己的上传接口即可。
+        accept: 'file',
+        //multiple: false,
+        multiple: true,
+        number: 8,
+        //exts: 'shp',
+        auto: false,
+        bindAction: '#ID-upload-files-btn-action',
+        choose: function(obj){
+            var that = this;
+            var files = this.files = obj.pushFile(); // 将每次选择的文件追加到文件队列
+            // 读取本地文件
+            obj.preview(function(index, file, result){
+                var tr = $(['<tr id="upload-'+ index +'">',
+                '<td>'+ file.name +'</td>',
+                '<td>'+ (file.size/1024).toFixed(1) +'kb</td>',
+                '<td><div class="layui-progress" lay-filter="progress-demo-'+ index +'"><div class="layui-progress-bar" lay-percent=""></div></div></td>',
+                '<td>',
+                    '<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>',
+                    '<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>',
+                '</td>',
+                '</tr>'].join(''));
+                // 单个重传
+                tr.find('.demo-reload').on('click', function(){
+                    obj.upload(index, file);
+                });
+                // 删除
+                tr.find('.demo-delete').on('click', function(){
+                    delete files[index]; // 删除对应的文件
+                    tr.remove(); // 删除表格行
+                    // 清空 input file 值，以免删除后出现同名文件不可选
+                    uploadListIns.config.elem.next()[0].value = '';
+                });
+                that.elemList.append(tr);
+                element.render('progress'); // 渲染新加的进度条组件
+            });
+        },
+        done: function(res, index, upload){ // 成功的回调
+            var that = this;
+            // if(res.code == 0){ // 上传成功
+            var tr = that.elemList.find('tr#upload-'+ index)
+            var tds = tr.children();
+            tds.eq(3).html(''); // 清空操作
+            delete this.files[index]; // 删除文件队列已经上传成功的文件
+            return;
+            //}
+            //this.error(index, upload);
+        },
+        allDone: function(obj){ // 多文件上传完毕后的状态回调
+            console.log(obj)
+        },
+        error: function(index, upload){ // 错误回调
+            var that = this;
+            var tr = that.elemList.find('tr#upload-'+ index);
+            var tds = tr.children();
+            // 显示重传
+            tds.eq(3).find('.demo-reload').removeClass('layui-hide');
+        },
+        progress: function(n, elem, e, index){ // 注意：index 参数为 layui 2.6.6 新增
+            element.progress('progress-demo-'+ index, n + '%'); // 执行进度条。n 即为返回的进度百分比
+        }
+    });
+});
+
+
+namespace = '/conn_logging';
+let socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+// 添加一个连接监听器
+// message 服务端 发送的名称
+var log_null = 0 //存放空日志次数
+socket.on('message', function(data) {
+    console.log(data)
+    let div = $('#log_list');
+    div.innerHTML = "<div id='log_text'></div>" // 每次跑清空div内内容
+    if (typeof data['data']=="object"){
+        for (i=0;i<data['data'].length;i++){ //遍历日志
+            var p = document.createElement("p") //生成一个p标签
+            p.innerHTML = data['data'][i] //日志存放到P标签内
+            var header = document.getElementById('log_text')
+            insertAfter(p,header) //将p标签添加到log_text div中
+            div.scrollTop = div.scrollHeight //滚动条实时显示到底部
+        }
+    } else {
+        var p = document.createElement("p") //生成一个p标签
+        p.innerHTML = data['data'] //日志存放到P标签内
+        var header = document.getElementById('log_text')
+        insertAfter(p,header) //将p标签添加到log_text div中
+        div.scrollTop = div.scrollHeight //滚动条实时显示到底部
+    }
+    /*
+    var p = document.createElement("p") //生成一个p标签
+    p.innerHTML = data['data']['log_list'] //日志存放到P标签内
+    var header = document.getElementById('log_text')
+    insertAfter(p, header) //将p标签添加到log_text div中
+    div.scrollTop = div.scrollHeight //滚动条实时显示到底部
+    $("#log_list").animate({ scrollBottom: $(document).height() }, "slow");
+    */
+});
+
+let time;
+// 评估按钮
+$('#btn-evaluating').on('click', function(){
+    let div = $('#log_list');
+    div.innerHTML = "<div id='log_text'></div>" // 每次跑清空div内内容
+    clearTimeout(time); // 清空定时器
+    let log_null = 0;   // 存放日志次数
+
+    $.ajax({
+        url: '/fire_evaluating_do',
+        type: 'get',
+        beforeSend: function(xhr){
+            $('#btn-evaluating').html('评估中。。。请稍候！');
+            $('#evaluating_status').html('评估中！请稍候！您可以查看下方卡片中的日志')
+            $('#btn-evaluating').attr('disabled', true);
+            $('#evaluating-icon-done').addClass('layui-hide');
+            $('#evaluating-icon-loading').removeClass('layui-hide');
+            layer.msg('评估中...，请稍候！', {icon: 16, time: 0});
+            $('#progress').removeClass('layui-hide');
+            $('#id-res').html('评估中...');
+        },
+        success: function (res) {
+            $('#id-res').html(res)
+        },
+        error: function(xhr){
+
+        },
+        complete: function(xhr){
+            $('#btn-evaluating').html('开始评估');
+            $('#btn-evaluating').attr('disabled', false);
+            $('#evaluating_status').html('评估完成')
+            $('#evaluating-icon-loading').addClass('layui-hide');
+            $('#evaluating-icon-done').removeClass('layui-hide');
+            layer.msg('评估完成!');
+            $('#evaluating-icon-loading').removeClass('layui-icon-loading');
+            $('#evaluating-icon-done').addClass('layui-icon-success');
+            $('#progress').addClass('layui-hide');
+            layer.msg('评估结束', {icon: 1});
+
+            // 断开连接
+            socket.emit('disconnect_request');
+        }
+    });
+});
+
+// 创建一个元素节点
+function insertAfter(newElement, targetElement){ // newElement： 要追加的元素，targetElement：指定元素的位置
+    let parent = targetElement.parentNode;       // 找到指定元素的父节点
+    parent.appendChild(newElement, targetElement);
+}
+</script>
+{% endblock %}
