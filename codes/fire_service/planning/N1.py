@@ -7,7 +7,7 @@
 
 import os
 import arcpy
-from codes.tools.data_manager import add_field, field_normalize
+from tools.data_manager import add_field, field_normalize
 
 
 class N1(object):

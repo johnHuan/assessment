@@ -12,9 +12,9 @@ import time
 import arcpy
 import yaml
 
-from codes.index import socketio
-from logging_ import logging_
 from fire_service.planning.fire_planning import Fire_SNC
+# from codes.index import socketio
+from logging_ import logging_
 from sanitation_service.planning.sanitation_planning import Sanitation_SNC
 from tools.data_prepare import Planning_Preparation
 from tools.file_helper import read_configs, del_temp_file
@@ -33,11 +33,11 @@ def execute_planning():
     config_file = r"configs.yaml"  # 配置文件路径
     config_dict = read_configs(config_file)  # 读取配置文件
     log.info("开始删除临时文件")
-    socketio.emit('message', {'data': '开始删除临时文件'}, namespace='/conn_logging')
+    # socketio.emit('message', {'data': '开始删除临时文件'}, namespace='/conn_logging')
 
     del_temp_file(config_dict['directories']["temp_file_planning"])  # 删除临时文件夹中现有数据
     log.info("删除临时文件完成")
-    socketio.emit('message', {'data': '删除临时文件完成'}, namespace='/conn_logging')
+    # socketio.emit('message', {'data': '删除临时文件完成'}, namespace='/conn_logging')
     log.info("开始基础数据准备！")
     pp = Planning_Preparation(config_dict)  # 数据预处理
     log.info("基础数据准备完成！")

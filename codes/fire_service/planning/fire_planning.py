@@ -15,8 +15,8 @@ from S2 import S2
 from N1 import N1
 from N2 import N2
 from N3 import N3
-from codes.tools.data_manager import add_field
-from codes.logging_ import logging_
+from tools.data_manager import add_field
+from logging_ import logging_
 
 
 class Fire_SNC(object):

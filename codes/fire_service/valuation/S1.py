@@ -6,9 +6,9 @@
 
 
 import os
-from codes.tools.accessibility import get_accessibility
-from codes.tools.data_manager import field_normalize, add_field
-from codes.tools.accessibility_road import compute_time
+from tools.accessibility import get_accessibility
+from tools.data_manager import field_normalize, add_field
+from tools.accessibility_road import compute_time
 
 
 class S1(object):

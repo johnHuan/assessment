@@ -14,7 +14,7 @@ import yaml
 
 from data_manager import add_field, polygon2point
 from file_helper import del_temp_file
-from codes.logging_ import logging_
+from logging_ import logging_
 
 with open('configs.yaml', 'r') as f_y:
     content = f_y.read()

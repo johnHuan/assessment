@@ -13,8 +13,10 @@ shp_path:
   polygons: D:/Research/Sanitation/assessment/data/data_for_test/polygons/test.shp  # 地块数据
   fire_path: D:/Research/Sanitation/assessment/codes/portal/data/
   san_path: D:/Research/Sanitation/assessment/codes/portal/data/
-  fire_shp: D:/Research/Sanitation/assessment/result/polygons/target.shp
-  san_shp: D:/Research/Sanitation/assessment/result/polygons/target.shp
+#  planing: D:/Research/Sanitation/assessment/result/polygons/target.shp
+#  valuation: D:/Research/Sanitation/assessment/result/polygons/target.shp
+  planning: D:/Research/Sanitation/assessment/result/planning_result.shp
+  valuation: D:/Research/Sanitation/assessment/result/valuation_result.shp
   #roads: C:/Users/Administrator/Desktop/assessment/data/data_for_test/roads/roads_cut_topo_ND.nd  # 路网数据
   hazardous_facilities: D:/Research/Sanitation/assessment/data/data_for_test/POIs/hazardous_facilities.shp  # 危险设施POI
   polygons_for_planning: D:/Research/Sanitation/assessment/data/data_for_test/polygons/planning.shp  # 用于规划的用地数据
@@ -36,3 +38,6 @@ other_files:
   pop_raster: D:/Research/Sanitation/assessment/data/data_for_test/pop/hubei_pop.tif  # 人口密度栅格
 log_path: D:/Research/Sanitation/assessment/codes/log.log
 planning_path: D:/Research/Sanitation/assessment/codes/
+gdf_path:
+  planning: D:/Research/Sanitation/assessment/codes/data/planning_gdf.csv
+  valuation: D:/Research/Sanitation/assessment/codes/data/valuation_gdf.csv

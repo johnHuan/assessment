@@ -8,10 +8,10 @@
         <blockquote class="layui-elem-quote layui-text">
             {{ page_loc }}
         </blockquote>
-        <div class="layui-card">
+       <div class="layui-card">
             <div class="colorbar">
-                <span class="left_text">{{ min_c | round(2) }}</span>
-                <span class="right_text">{{ max_c | round(2) }}</span>
+                <span class="left_text">{{ min_n | round(2) }}</span>
+                <span class="right_text">{{ max_n | round(2) }}</span>
             </div>
             <div id="map_container"></div>
             <div class="status" style="bottom: 68px;"></div>
@@ -40,8 +40,8 @@
 <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
 <script type="text/javascript"
         src="https://webapi.amap.com/maps?v=2.0&key=b951be3b4b0e36ad45b910426f4d7131&plugin=AMap.Geocoder"></script>
-<script type="text/javascript" src="https://webapi.amap.com/maps?v=2.0&key=b951be3b4b0e36ad45b910426f4d7131"></script>
 <script type="text/javascript">
+
     let dom = $('#map_container')[0];
     let h = dom.currentStyle ? dom.currentStyle['height'] : getComputedStyle(dom, 'height');
     let tall = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
@@ -81,32 +81,32 @@
         $('.status').html("当前位置： " + e.lnglat.getLng() + ', ' + e.lnglat.getLat());
     });
 
-      function addPolygon(data, color) {
-        let polygon = new AMap.Polygon({
-          path: data,
-          fillColor: 'rgb('+color+')',
-          strokeOpacity: 1,
-          fillOpacity: 0.5,
-          strokeColor: 'rgb('+color+')',
-          strokeWeight: 1,
-          strokeStyle: 'dashed',
-          strokeDasharray: [5, 5],
-        });
-        polygon.on('mouseover', () => {
-          polygon.setOptions({
-            fillOpacity: 0.9,
-          })
-        })
-        polygon.on('mouseout', () => {
-          polygon.setOptions({
-            fillOpacity: 0.5,
-          })
-        })
-        map.add(polygon);
-      }
-      colorbar = {{ colorbar }}
-      for(let i=0; i< bdys.length; i++){
-         addPolygon(bdys[i], colorbar[i]);
-      }
+  function addPolygon(data, color) {
+    let polygon = new AMap.Polygon({
+      path: data,
+      fillColor: 'rgb('+color+')',
+      strokeOpacity: 1,
+      fillOpacity: 0.5,
+      strokeColor: 'rgb('+color+')',
+      strokeWeight: 1,
+      strokeStyle: 'dashed',
+      strokeDasharray: [5, 5],
+    });
+    polygon.on('mouseover', () => {
+      polygon.setOptions({
+        fillOpacity: 0.9,
+      })
+    })
+    polygon.on('mouseout', () => {
+      polygon.setOptions({
+        fillOpacity: 0.5,
+      })
+    })
+    map.add(polygon);
+  }
+  colorbar = {{ colorbar }}
+  for(let i=0; i< bdys.length; i++){
+     addPolygon(bdys[i], colorbar[i]);
+  }
 </script>
 {% endblock %}

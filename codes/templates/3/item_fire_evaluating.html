@@ -259,7 +259,7 @@ $('#btn-evaluating').on('click', function(){
         type: 'get',
         beforeSend: function(xhr){
             $('#btn-evaluating').html('评估中。。。请稍候！');
-            $('#evaluating_status').html('评估中！请稍候！您可以查看下方卡片中的日志')
+            $('#evaluating_status').html('评估中！请稍候！')
             $('#btn-evaluating').attr('disabled', true);
             $('#evaluating-icon-done').addClass('layui-hide');
             $('#evaluating-icon-loading').removeClass('layui-hide');

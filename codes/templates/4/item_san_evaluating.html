@@ -22,15 +22,6 @@
                         </div>
                         <div class="layui-panel layui-hide" id="id-preview-info" style="padding: 20px 40px; margin-top: 30px;"></div>
                         <button type="button" style="margin: 20px 0 0 0;" class="layui-btn" id="ID-upload-files-btn-action">开始上传</button>
-                        <!--
-                        <button type="button" style="margin-top: 10px;" class="layui-btn layui-col-md4 layui-btn-disabled" id="ID-upload-demo-action">开始上传</button>
-                        <div id="error-box" class="layui-panel layui-hide">
-                            <div id="error_info" class="layui-bg-red" style="padding: 32px;"></div>
-                        </div>
-                        <div id="progress" class="layui-hide layui-progress layui-progress-big" lay-showpercent="true" lay-filter="progress">
-                            <div class="layui-progress-bar" lay-percent=""></div>
-                        </div>
-                        -->
                     </div>
                 </div>
             </div>
@@ -221,7 +212,7 @@ $('#btn-evaluating').on('click', function(){
         type: 'get',
         beforeSend: function(xhr){
             $('#btn-evaluating').html('评估中。。。请稍候！');
-            $('#evaluating_status').html('评估中！请稍候！您可以查看下方卡片中的日志')
+            $('#evaluating_status').html('评估中！请稍候！')
             $('#btn-evaluating').attr('disabled', true);
             $('#evaluating-icon-done').addClass('layui-hide');
             $('#evaluating-icon-loading').removeClass('layui-hide');

@@ -7,8 +7,8 @@
 
 import os
 import arcpy
-from codes.tools.accessibility import get_accessibility
-from codes.tools.data_manager import add_field, field_normalize, polygon2point
+from tools.accessibility import get_accessibility
+from tools.data_manager import add_field, field_normalize, polygon2point
 
 
 class S1_(object):

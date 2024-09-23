@@ -18,7 +18,7 @@ from data_manager import get_year_risk
 import sys
 import yaml
 
-from codes.logging_ import logging_
+from logging_ import logging_
 
 with open('./configs.yaml', 'r') as f_y:
     content = f_y.read()

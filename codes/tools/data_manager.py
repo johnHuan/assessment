@@ -11,7 +11,7 @@ import sys
 
 import yaml
 
-from codes.logging_ import logging_
+from logging_ import logging_
 
 reload(sys)
 sys.setdefaultencoding('utf8')

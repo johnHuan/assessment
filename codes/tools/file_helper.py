@@ -11,7 +11,7 @@ import pandas as pd
 import yaml
 
 from data_manager import add_field
-from codes.logging_ import logging_
+from logging_ import logging_
 
 with open('./configs.yaml', 'r') as f_y:
     content = f_y.read()

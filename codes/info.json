@@ -1,25 +1,46 @@
 {
   "key_value_name": [
-    { "key": "S",      "value": "fire_given",      "name": "消防服务供给",        "status": 0    },
-    { "key": "S1",     "value": "fire_accessibility",      "name": "消防用地可达性",       "status": 0    },
-    { "key": "S2",     "value": "fire_survive",      "name": "消防救援能力",        "status": 0    },
-    { "key": "S21",    "value": "fire_level",      "name": "消防站等级",          "status": 0    },
-    { "key": "S22",    "value": "fire_members",      "name": "消防员数量",          "status": 0    },
-    { "key": "S23",    "value": "fire_devices",      "name": "消防设备数量",        "status": 0    },
-    { "key": "N",      "value": "fire_demand",      "name": "消防服务需求",        "status": 0    },
-    { "key": "N1",     "value": "fire_pop_density",      "name": "人口密度",           "status": 0    },
-    { "key": "N2",     "value": "fire_buildings",      "name": "建筑消防需求",        "status": 0    },
-    { "key": "N3",     "value": "fire_risk",      "name": "火灾风险",           "status": 0    },
-    { "key": "S_",     "value": "san_given",      "name": "环卫服务供给",        "status": 0    },
-    { "key": "S1_",    "value": "san_garbage_collection",      "name": "垃圾收集能力",        "status": 0    },
-    { "key": "S11_",   "value": "san_collection_accessibility",      "name": "收集站可达性",        "status": 0    },
-    { "key": "S12_",   "value": "san_transfer",      "name": "垃圾转运能力",        "status": 0    },
-    { "key": "S2_",    "value": "san_given",      "name": "消防服务供给",        "status": 0    },
-    { "key": "S21_",   "value": "san_transfer_accessibility",      "name": "转运站可达性",        "status": 0    },
-    { "key": "S22_",   "value": "san_garbage_capacity",      "name": "垃圾转运容量",        "status": 0    },
-    { "key": "N_",     "value": "san_service_demand",      "name": "环卫服务需求",        "status": 0    },
-    { "key": "N1_",    "value": "san_citizens",      "name": "常住人口环卫需求",     "status": 0    },
-    { "key": "N2_",    "value": "san_service",      "name": "服务人口环卫需求",     "status": 0    }
+    {
+      "group_fire":
+      [
+        { "key": "nS1",     "value": "fire_access",      "name": "供给-可达性",       "status": 0    },
+        { "key": "nS2",     "value": "fire_ability",      "name": "供给-消防站能力",        "status": 0    },
+        { "key": "nS",      "value": "fire_given",      "name": "供给能力",        "status": 0    },
+        { "key": "nN1",     "value": "fire_pop_density",      "name": "需求-人口密度",           "status": 0    },
+        { "key": "nN2",     "value": "fire_buildings",      "name": "需求-建筑消防风险",        "status": 0    },
+        { "key": "nN3",     "value": "fire_risk",      "name": "需求-危险设施风险",           "status": 0    },
+        { "key": "nN",      "value": "fire_demand",      "name": "需求-消防需求能力",        "status": 0    },
+        { "key": "nC",      "value": "fire_service",      "name": "综合-消防服务能力",        "status": 0    }
+      ]
+    },
+    {
+      "group_san":
+      [
+          { "key": "nS1_",    "value": "san_collection",      "name": "供给-收集能力",        "status": 0    },
+          { "key": "nS2_",    "value": "san_transfer",      "name": "供给-转运能力",        "status": 0    },
+          { "key": "nS_",     "value": "san_given",      "name": "供给能力",        "status": 0    },
+          { "key": "nN1_",    "value": "san_citizen",      "name": "常住人口垃圾产量",     "status": 0    },
+          { "key": "nN2_",    "value": "san_service",      "name": "服务人口垃圾产量",     "status": 0    },
+          { "key": "nN_",     "value": "san_demand",      "name": "环卫服务需求",        "status": 0    },
+          { "key": "nC_",     "value": "san_ability",      "name": "环卫服务能力",        "status": 0    }
+      ]
+    },
+    {
+      "group_fire_valuation":
+      [
+        { "key": "nS",    "value": "val_fire_given",      "name": "供给能力",        "status": 0    },
+        { "key": "nN",    "value": "val_fire_demand",      "name": "需求能力",        "status": 0    },
+        { "key": "nC",    "value": "val_fire_service",      "name": "综合-服务能力",        "status": 0    }
+      ]
+    },
+    {
+      "group_san_valuation":
+      [
+        { "key": "nS_",    "value": "val_san_given",      "name": "供给能力",        "status": 0    },
+        { "key": "nN_",    "value": "val_san_demand",      "name": "需求能力",        "status": 0    },
+        { "key": "nC_",    "value": "val_san_service",      "name": "综合-服务能力",        "status": 0    }
+      ]
+    }
   ],
   "base_path": "D:/lb/myCode/assessment/data/data_for_test/",
   "required_file": [

@@ -14,8 +14,8 @@ from S1_ import S1_
 from S2_ import S2_
 from N1_ import N1_
 from N2_ import N2_
-from codes.tools.data_manager import add_field
-from codes.logging_ import logging_
+from tools.data_manager import add_field
+from logging_ import logging_
 
 
 class Sanitation_SNC(object):

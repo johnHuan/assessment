@@ -7,7 +7,7 @@
 
 import os
 import arcpy
-from codes.tools.data_manager import polygon2point, add_field, field_normalize, get_fire_station_level
+from tools.data_manager import polygon2point, add_field, field_normalize, get_fire_station_level
 import sys
 
 reload(sys)
